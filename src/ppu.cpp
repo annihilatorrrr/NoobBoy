@@ -50,6 +50,7 @@ void PPU::step() {
                 compare_ly_lyc();
                 if (*scanline == 153) {
                     *scanline = 0;
+                    window_line = 0;
                     mode = 2;
                     mmu->write_byte(0xff41, (mmu->read_byte(0xff41) & 0xFC) | (mode & 3));
                     if (stat->oam_interrupt)
@@ -90,11 +91,19 @@ void PPU::compare_ly_lyc() {
 void PPU::render_scan_lines() {
     bool row_pixels[160] = {0};
     this->render_scan_line_background(row_pixels);
-    this->render_scan_line_window();
+    this->render_scan_line_window(row_pixels);
     this->render_scan_line_sprites(row_pixels);
 }
 
 void PPU::render_scan_line_background(bool* row_pixels) {
+    if (!control->bgDisplay) {
+        int pixelOffset = *this->scanline * 160;
+
+        std::fill_n(&framebuffer[pixelOffset], 160, mmu->palette_BGP[0]);
+        std::fill_n(row_pixels, 160, false);
+        return;
+    }
+
     uint16_t address = 0x9800;
 
     if (this->control->bgDisplaySelect)
@@ -134,89 +143,86 @@ void PPU::render_scan_line_background(bool* row_pixels) {
     }
 }
 
-void PPU::render_scan_line_window() {
-    if (!this->control->windowEnable) {
+void PPU::render_scan_line_window(bool* row_pixels) {
+    if (!this->control->bgDisplay || !this->control->windowEnable)
         return;
-    }
 
-    if (mmu->read_byte(0xFF4A) > *this->scanline) {
+    int wy = mmu->read_byte(0xFF4A);
+    int wx = mmu->read_byte(0xFF4B) - 7;
+
+    if (*this->scanline < wy || wx > 159)
         return;
-    }
 
-    uint16_t address = 0x9800;
-    if (this->control->windowDisplaySelect)
-        address += 0x400;
-
-    address += ((*this->scanline - mmu->read_byte(0xFF4A)) / 8) * 32;
-    int y = (*this->scanline - mmu->read_byte(0xFF4A)) & 7;
-    int x = 0;
-
+    uint16_t address = this->control->windowDisplaySelect ? 0x9C00 : 0x9800;
+    address += (window_line / 8) * 32;
+    
+    int y = window_line & 7;
     int pixelOffset = *this->scanline * 160;
-    pixelOffset += mmu->read_byte(0xFF4B) - 7;
-    for (uint16_t tile_address = address; tile_address < address + 20; tile_address++) {
-        int tile = this->mmu->read_byte(tile_address);
 
+    for (int i = 0; i < 20; i++) {
+        int tile = this->mmu->read_byte(address + i);
         if (!this->control->bgWindowDataSelect && tile < 128)
             tile += 256;
+        
+        for (int x = 0; x < 8; x++) {
+            int target_x = wx + (i * 8) + x;
 
-        for (; x < 8; x++) {
-            if (pixelOffset > sizeof(framebuffer))
-                continue;
-            int colour = mmu->tiles[tile].pixels[y][x];
-            framebuffer[pixelOffset++] = mmu->palette_BGP[colour];
+            if (target_x >= 0 && target_x < 160) {
+                int colour = mmu->tiles[tile].pixels[y][x];
+
+                framebuffer[pixelOffset + target_x] = mmu->palette_BGP[colour];
+                row_pixels[target_x] = (colour > 0);
+            }
         }
-        x = 0;
     }
+    window_line++;
 }
 
 void PPU::render_scan_line_sprites(bool* row_pixels) {
+    if (!control->spriteDisplayEnable)
+        return;
+
     int sprite_height = control->spriteSize ? 16 : 8;
+    int sprites_found = 0;
+    uint8_t sprite_indices[10]; 
+    uint8_t pixel_sprite_x[160];
+    std::fill_n(pixel_sprite_x, 160, 255);
 
-    bool visible_sprites[40];
-    int sprite_row_count = 0;
-
-    for (int i = 39; i >= 0; i--) {
-        auto sprite = mmu->sprites[i];
-
-        if (!sprite.ready) {
-            visible_sprites[i] = false;
+    // Identify the first 10 valid sprites
+    for (int i = 0; sprites_found < 10 && i < 40; i++) {
+        auto& sprite = mmu->sprites[i];
+        if (!sprite.ready)
             continue;
-        }
 
-        if ((sprite.y > *scanline) || ((sprite.y + sprite_height) <= *scanline)) {
-            visible_sprites[i] = false;
+        if (sprite.y > *scanline || (sprite.y + sprite_height) <= *scanline)
             continue;
-        }
-
-        visible_sprites[i] = sprite_row_count++ <= 10;
+        
+        sprite_indices[sprites_found++] = i;
     }
 
-    for (int i = 39; i >= 0; i--) {
-        if (!visible_sprites[i])
-            continue;
-
-        auto sprite = mmu->sprites[i];
-
-        if ((sprite.x < -7) || (sprite.x >= 160))
-            continue;
-
+    // Render only those 10 sprites
+    for (int i = 0; i < sprites_found; i++) {
+        auto& sprite = mmu->sprites[sprite_indices[i]];
+        
         // Flip vertically
         int pixel_y = *scanline - sprite.y;
-        pixel_y = sprite.options.yFlip ? (7 + 8 * control->spriteSize) - pixel_y : pixel_y;
+        if (sprite.options.yFlip)
+            pixel_y = (sprite_height - 1) - pixel_y;
 
         for (int x = 0; x < 8; x++) {
-            int tile_num = sprite.tile & (control->spriteSize ? 0xFE : 0xFF);
-            int colour = 0;
+            int target_x = sprite.x + x;
 
-            int x_temp = sprite.x + x;
-            if (x_temp < 0 || x_temp >= 160)
+            if (target_x < 0 || target_x >= 160)
                 continue;
-
-            int pixelOffset = *this->scanline * 160 + x_temp;
+            
+            if (sprite.x >= pixel_sprite_x[target_x])
+                continue;
 
             // Flip horizontally
             uint8_t pixel_x = sprite.options.xFlip ? 7 - x : x;
-
+            int tile_num = sprite.tile & (control->spriteSize ? 0xFE : 0xFF);
+            
+            int colour = 0;
             if (control->spriteSize && (pixel_y >= 8))
                 colour = mmu->tiles[tile_num + 1].pixels[pixel_y - 8][pixel_x];
             else
@@ -226,8 +232,10 @@ void PPU::render_scan_line_sprites(bool* row_pixels) {
             if (!colour)
                 continue;
 
-            if (!row_pixels[x_temp] || !sprite.options.renderPriority)
-                framebuffer[pixelOffset] = sprite.colourPalette[colour];
+            if (!row_pixels[target_x] || !sprite.options.renderPriority) {
+                framebuffer[*scanline * 160 + target_x] = sprite.colourPalette[colour];
+                pixel_sprite_x[target_x] = sprite.x;
+            }
         }
     }
 }

@@ -7,7 +7,7 @@
 class PPU {
     void render_scan_lines();
     void render_scan_line_background(bool *row_pixels);
-    void render_scan_line_window();
+    void render_scan_line_window(bool *row_pixels);
     void render_scan_line_sprites(bool *row_pixels);
 
    public:
@@ -55,6 +55,7 @@ class PPU {
     int modeclock = 0;
 
     bool can_render = false;
+    int window_line = 0;
 
     PPU(Registers *registers, Interrupts *interrupts, MMU *mmu);
     void step();

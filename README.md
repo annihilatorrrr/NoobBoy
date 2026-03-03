@@ -59,8 +59,7 @@ arguments:
 ## Features
 
 - Sound (WIP)
-- Correct instructions and PPU timings
-- Correct scanline timing
+- Correct instructions
 - Sprites with correct row limitations
 - Correct sprite, window and background pixel priority
 - VRAM rendering with X/Y scroll overlay
@@ -83,6 +82,8 @@ Currently, the `halt bug` is missing because of some incorrect interrupt timings
 | *The Legend of Zelda - Link's Awakening* |*Pokemon Blue* |
 | ![space-1.jpg](screenshots/dk.png) |  ![space-1.jpg](screenshots/castlevania.png) | 
 | *Donkey Kong Land* |*Castlevania* |
+| ![space-1.jpg](screenshots/dmg-acid2.png) |   | 
+| *dmg-acid2 Test Rom* |  |
 
 
 
