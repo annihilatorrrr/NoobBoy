@@ -116,6 +116,8 @@ class MMU {
     bool is_halted = false;
     bool trigger_halt_bug = false;
 
+    std::string serial_output;
+
     MMU(Cartridge *cartridge);
 
     void load_boot_rom(std::string location);

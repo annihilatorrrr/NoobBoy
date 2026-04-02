@@ -1,0 +1,45 @@
+{
+  "default_timeout_cycles": 100000000,
+  "default_process_timeout_seconds": 120,
+  "suites": {
+    "blargg": {
+      "detection": "serial",
+      "timeout_cycles": 200000000
+    },
+    "mooneye": {
+      "detection": "mooneye",
+      "timeout_cycles": 50000000
+    },
+    "samesuite": {
+      "detection": "mooneye",
+      "timeout_cycles": 50000000
+    },
+    "daid": {
+      "detection": "mooneye",
+      "timeout_cycles": 50000000
+    },
+    "ax6": {
+      "detection": "serial",
+      "timeout_cycles": 50000000
+    },
+    "cpp": {
+      "detection": "serial",
+      "timeout_cycles": 50000000
+    },
+    "acid": {
+      "detection": "visual",
+      "skip": true,
+      "skip_reason": "Visual comparison required"
+    },
+    "hacktix": {
+      "detection": "visual",
+      "skip": true,
+      "skip_reason": "Visual comparison required"
+    },
+    "mealybug-tearoom-tests": {
+      "detection": "visual",
+      "skip": true,
+      "skip_reason": "Visual comparison required"
+    }
+  }
+}

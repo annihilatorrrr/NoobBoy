@@ -97,6 +97,13 @@ uint8_t MMU::read_byte(uint16_t address) {
 }
 
 void MMU::write_byte(uint16_t address, uint8_t value) {
+    // Serial port capture
+    if (address == 0xFF02 && value == 0x81) {
+        serial_output += static_cast<char>(memory[0xFF01]);
+        memory[0xFF02] = 0x00;
+        return;
+    }
+
     if (address == 0xFF40) {
         memory[address] = value;
         if (!(value & (1 << 7))) {

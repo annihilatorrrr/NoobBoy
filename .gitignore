@@ -13,3 +13,5 @@ build.sh
 bootrom/bin
 bootrom/obj
 build
+tests/results.json
+tests/testroms/

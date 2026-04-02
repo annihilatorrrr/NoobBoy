@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 option(BUILD_DESKTOP "Build the desktop application" OFF)
 option(BUILD_WEB "Build the WebAssembly target" OFF)
 option(BUILD_TERMINAL "Build the terminal version" OFF)
+option(BUILD_TESTER "Build the headless tester application" OFF)
 option(BUILD_TESTS "Build tests" OFF)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
@@ -29,4 +30,8 @@ target_include_directories(NoobBoyCore PUBLIC ${INCLUDE_DIR})
 
 if(BUILD_DESKTOP)
     add_subdirectory(platforms/desktop)
+endif()
+
+if(BUILD_TESTER)
+    add_subdirectory(platforms/tester)
 endif()

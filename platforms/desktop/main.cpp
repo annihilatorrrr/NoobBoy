@@ -1,5 +1,8 @@
 #include "gb.h"
 
+#include <cstdlib>
+
+
 int main(int argc, char *argv[]) {
     std::string rom = "";
     std::string bootrom = "";
@@ -15,6 +18,7 @@ int main(int argc, char *argv[]) {
         {"bootrom", required_argument, 0, 'b'},
         {"rom", required_argument, 0, 'r'},
         {"load-save", required_argument, 0, 'l'},
+        {0, 0, 0, 0}
     };
 
     int opt;
