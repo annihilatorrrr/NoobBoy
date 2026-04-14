@@ -1,7 +1,7 @@
 # NoobBoy - GameBoy Emulator
 
 <!-- TEST_BADGES_START -->
-![ax6](https://img.shields.io/badge/ax6-0%2F3-red) ![blargg](https://img.shields.io/badge/blargg-12%2F52-red) ![cpp](https://img.shields.io/badge/cpp-0%2F3-red) ![daid](https://img.shields.io/badge/daid-0%2F4-red) ![mooneye](https://img.shields.io/badge/mooneye-27%2F112-red) ![samesuite](https://img.shields.io/badge/samesuite-1%2F76-red)
+![ax6](https://img.shields.io/badge/ax6-0%2F3-red) ![blargg](https://img.shields.io/badge/blargg-12%2F52-red) ![cpp](https://img.shields.io/badge/cpp-0%2F3-red) ![daid](https://img.shields.io/badge/daid-0%2F4-red) ![mooneye](https://img.shields.io/badge/mooneye-40%2F112-red) ![samesuite](https://img.shields.io/badge/samesuite-1%2F76-red)
 <!-- TEST_BADGES_END -->
 
 NoobBoy is a simple gameboy emulator that I'm writing to learn more about the world of emulation. This emulator has nothing special and has no extra features compared to other DMG emulators.

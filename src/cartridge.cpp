@@ -42,9 +42,18 @@ void Cartridge::detect_mbc_type(uint8_t type) {
             break;
         case 0x01:
         case 0x02:
-        case 0x03:
-            mbc = new MBC1(memory, ram, rom_banks_count, ram_banks_count);
+        case 0x03:{
+            bool is_multicart = rom_banks_count == 64 &&
+                                memory[0x40104] == 0xCE &&
+                                memory[0x40105] == 0xED;
+
+            if (is_multicart) {
+                mbc = new MBC1M(memory, ram, rom_banks_count, ram_banks_count);
+            } else {
+                mbc = new MBC1(memory, ram, rom_banks_count, ram_banks_count);
+            }
             break;
+        }
         case 0x05:
         case 0x06:
             mbc = new MBC2(memory, ram, rom_banks_count, ram_banks_count);

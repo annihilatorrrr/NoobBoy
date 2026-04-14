@@ -27,12 +27,18 @@ class MBC1 : public MBC {
    public:
     bool ram_enabled = false;
     bool mode = false;
-    uint8_t rom_bank = 1;
+    uint16_t rom_bank = 1;
     uint8_t ram_bank = 0;
 
     using MBC::MBC;
     uint8_t read_byte(uint16_t address);
     void write_byte(uint16_t address, uint8_t value);
+};
+
+class MBC1M : public MBC1 {
+   public:
+    using MBC1::MBC1;
+    uint8_t read_byte(uint16_t address);
 };
 
 class MBC2 : public MBC1 {

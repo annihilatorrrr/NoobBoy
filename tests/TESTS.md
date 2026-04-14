@@ -1,16 +1,16 @@
 # NoobBoy — Test Results
 
-> Generated on 2026-04-03 00:41:01
+> Generated on 2026-04-14 10:01:58
 
-**40** of **250** runnable tests passing (16%)
+**53** of **250** runnable tests passing (21%)
  · 41 skipped
 
 | | Count |
 |---|--:|
-| Passed | 40 |
+| Passed | 53 |
 | Failed | 0 |
-| Timeout | 131 |
-| Crashed | 79 |
+| Timeout | 120 |
+| Crashed | 77 |
 | Skipped | 41 |
 | **Total** | **291** |
 
@@ -52,7 +52,7 @@
 |---|---|
 | halt_bug.gb | ⏱ |
 | instr_timing.gb | ✅ |
-| interrupt_time.gb | 💥 |
+| interrupt_time.gb | ⏱ |
 
 </details>
 
@@ -354,63 +354,17 @@ All tests passing.
 
 </details>
 
-### emulator-only/mbc1 — 12/13 
+### emulator-only/mbc1 — 13/13 ✅
 
-<details>
-<summary>Details</summary>
+All tests passing.
 
-| Test | Result |
-|---|---|
-| bits_bank1.gb | ✅ |
-| bits_bank2.gb | ✅ |
-| bits_mode.gb | ✅ |
-| bits_ramg.gb | ✅ |
-| multicart_rom_8Mb.gb | ⏱ |
-| ram_256kb.gb | ✅ |
-| ram_64kb.gb | ✅ |
-| rom_16Mb.gb | ✅ |
-| rom_1Mb.gb | ✅ |
-| rom_2Mb.gb | ✅ |
-| rom_4Mb.gb | ✅ |
-| rom_512kb.gb | ✅ |
-| rom_8Mb.gb | ✅ |
+### emulator-only/mbc2 — 7/7 ✅
 
-</details>
+All tests passing.
 
-### emulator-only/mbc2 — 1/7 
+### emulator-only/mbc5 — 8/8 ✅
 
-<details>
-<summary>Details</summary>
-
-| Test | Result |
-|---|---|
-| bits_ramg.gb | ⏱ |
-| bits_romb.gb | ⏱ |
-| bits_unused.gb | ✅ |
-| ram.gb | 💥 |
-| rom_1Mb.gb | ⏱ |
-| rom_2Mb.gb | ⏱ |
-| rom_512kb.gb | ⏱ |
-
-</details>
-
-### emulator-only/mbc5 — 2/8 
-
-<details>
-<summary>Details</summary>
-
-| Test | Result |
-|---|---|
-| rom_16Mb.gb | ⏱ |
-| rom_1Mb.gb | ⏱ |
-| rom_2Mb.gb | ⏱ |
-| rom_32Mb.gb | ✅ |
-| rom_4Mb.gb | ⏱ |
-| rom_512kb.gb | ⏱ |
-| rom_64Mb.gb | ✅ |
-| rom_8Mb.gb | ⏱ |
-
-</details>
+All tests passing.
 
 ### manual-only — 0/1 
 
