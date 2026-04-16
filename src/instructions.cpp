@@ -1,4 +1,5 @@
 #include "instructions.h"
+#include "timer.h"
 
 InstructionSet::InstructionSet(Registers *registers, Interrupts *interrupts, MMU *mmu) {
     this->registers = registers;
@@ -811,7 +812,7 @@ void InstructionSet::execute(uint8_t opcode) {
             registers->print_flags();
             registers->print_registers();
             printf("Unsupported opcode: 0x%02x at 0x%04x\n", opcode, this->registers->pc);
-            printf("DIV: %d\n", mmu->timer.div);
+            printf("DIV: %d\n", mmu->timer->read_div());
             printf("Cycles: %d \n\n\n", mmu->clock.t);
             return;
             break;

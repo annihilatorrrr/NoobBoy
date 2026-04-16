@@ -1,16 +1,16 @@
 # NoobBoy — Test Results
 
-> Generated on 2026-04-14 10:01:58
+> Generated on 2026-04-16 10:06:29
 
-**53** of **250** runnable tests passing (21%)
+**64** of **250** runnable tests passing (26%)
  · 41 skipped
 
 | | Count |
 |---|--:|
-| Passed | 53 |
+| Passed | 64 |
 | Failed | 0 |
-| Timeout | 120 |
-| Crashed | 77 |
+| Timeout | 107 |
+| Crashed | 79 |
 | Skipped | 41 |
 | **Total** | **291** |
 
@@ -50,9 +50,9 @@
 
 | Test | Result |
 |---|---|
-| halt_bug.gb | ⏱ |
+| halt_bug.gb | 💥 |
 | instr_timing.gb | ✅ |
-| interrupt_time.gb | ⏱ |
+| interrupt_time.gb | 💥 |
 
 </details>
 
@@ -206,7 +206,7 @@ All tests passing.
 
 ## mooneye
 
-### acceptance — 3/41 
+### acceptance — 4/41 
 
 <details>
 <summary>Details</summary>
@@ -231,7 +231,7 @@ All tests passing.
 | call_timing.gb | ⏱ |
 | call_timing2.gb | ⏱ |
 | di_timing-GS.gb | ⏱ |
-| div_timing.gb | ⏱ |
+| div_timing.gb | ✅ |
 | ei_sequence.gb | ⏱ |
 | ei_timing.gb | ⏱ |
 | halt_ime0_ei.gb | ✅ |
@@ -331,28 +331,9 @@ All tests passing.
 
 </details>
 
-### acceptance/timer — 3/13 
+### acceptance/timer — 13/13 ✅
 
-<details>
-<summary>Details</summary>
-
-| Test | Result |
-|---|---|
-| div_write.gb | ⏱ |
-| rapid_toggle.gb | ⏱ |
-| tim00.gb | ⏱ |
-| tim00_div_trigger.gb | ✅ |
-| tim01.gb | ✅ |
-| tim01_div_trigger.gb | ⏱ |
-| tim10.gb | ⏱ |
-| tim10_div_trigger.gb | ⏱ |
-| tim11.gb | ⏱ |
-| tim11_div_trigger.gb | ✅ |
-| tima_reload.gb | ⏱ |
-| tima_write_reloading.gb | ⏱ |
-| tma_write_reloading.gb | ⏱ |
-
-</details>
+All tests passing.
 
 ### emulator-only/mbc1 — 13/13 ✅
 

@@ -9,6 +9,8 @@
 #include <string>
 #include <sstream>
 
+class Timer;
+
 struct Colour {
     union {
         struct {
@@ -50,12 +52,7 @@ class MMU {
         int t_instr = 0;
     } clock;
 
-    struct timer {
-        uint16_t div = 0;
-        uint8_t tima = 0;
-        uint8_t tma = 0;
-        uint8_t tac = 0;
-    } timer;
+    Timer *timer = nullptr;
 
     struct Sprite {
         bool ready;

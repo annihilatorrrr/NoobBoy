@@ -1,4 +1,5 @@
 #include "mmu.h"
+#include "timer.h"
 
 MMU::MMU(Cartridge *cartridge) { this->cartridge = cartridge; }
 
@@ -71,13 +72,13 @@ uint8_t MMU::read_byte(uint16_t address) {
 
     // Timers
     else if (address == 0xff04)
-        return timer.div;
+        return timer->read_div();
     else if (address == 0xff05)
-        return timer.tima;
+        return timer->read_tima();
     else if (address == 0xff06)
-        return timer.tma;
+        return timer->read_tma();
     else if (address == 0xff07)
-        return timer.tac;
+        return timer->read_tac();
 
     if (address == 0xff0f)
         return memory[0xFF0F];
@@ -124,13 +125,13 @@ void MMU::write_byte(uint16_t address, uint8_t value) {
 
     // Timers
     else if (address == 0xff04)
-        timer.div = 0;
+        timer->write_div();
     else if (address == 0xff05)
-        timer.tima = value;
+        timer->write_tima(value);
     else if (address == 0xff06)
-        timer.tma = value;
+        timer->write_tma(value);
     else if (address == 0xff07)
-        timer.tac = value;
+        timer->write_tac(value);
 
     // Update colour palette
     else if (address == 0xff47)

@@ -10,9 +10,10 @@ void GB::init(Cartridge *cartridge, bool no_bootrom, std::string bootrom, bool d
     mmu = new MMU(cartridge);
 
     interrupts = new Interrupts(&registers, mmu);
-    cpu = new CPU(&registers, interrupts, mmu);
+    timer = new Timer(interrupts);
+    cpu = new CPU(&registers, interrupts, timer, mmu);
     ppu = new PPU(&registers, interrupts, mmu);
-    timer = new Timer(mmu, interrupts);
+    mmu->timer = timer;
     joypad = new Joypad(&status, interrupts, mmu);
     status.debug = debug;
 
@@ -42,7 +43,7 @@ bool GB::run_step() {
         if (!interrupted)
             cpu->step();
 
-        timer->inc();
+        timer->tick(mmu->clock.t_instr);
         ppu->step();
     }
 

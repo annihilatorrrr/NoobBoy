@@ -1,9 +1,10 @@
 #include "cpu.h"
 
-CPU::CPU(Registers* registers, Interrupts* interrupts, MMU* memory) {
+CPU::CPU(Registers* registers, Interrupts* interrupts, Timer* timer, MMU* memory) {
     this->memory = memory;
     this->interrupts = interrupts;
     this->registers = registers;
+    this->timer = timer;
     this->instructions = new InstructionSet(registers, interrupts, memory);
 }
 
@@ -28,10 +29,10 @@ void CPU::no_bootrom_init() {
     memory->write_byte(0xFF41, 0x80);
     memory->write_byte(0xFF40, 0x91);
 
-    memory->timer.div = 0xD3;
-    memory->timer.tima = 0x00;
-    memory->timer.tma = 0x00;
-    memory->timer.tac = 0xF8;
+    timer->set_counter(0xD300);
+    timer->write_tima(0x00);
+    timer->write_tma(0x00);
+    timer->write_tac(0xF8);
 }
 
 void CPU::step() {

@@ -21,7 +21,6 @@ void Cartridge::load_game_rom(std::string location) {
 
     rom_banks_count = size / 0x4000;
     ram_banks_count = get_ram_banks_count(memory[0x149]);
-
     ram = new uint8_t[ram_banks_count * 0x2000];
 
     rom_title = std::string(memory + 0x134, memory + 0x143);
@@ -56,7 +55,8 @@ void Cartridge::detect_mbc_type(uint8_t type) {
         }
         case 0x05:
         case 0x06:
-            mbc = new MBC2(memory, ram, rom_banks_count, ram_banks_count);
+            ram = new uint8_t[0x200];
+            mbc = new MBC2(memory, ram, rom_banks_count, 0);
             break;
         case 0x0F:
         case 0x10:

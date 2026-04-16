@@ -21,9 +21,10 @@ static int run_headless(const std::string &rom, long long max_cycles, const std:
     MMU *mmu = new MMU(cartridge);
     Registers registers;
     Interrupts *interrupts = new Interrupts(&registers, mmu);
-    CPU *cpu = new CPU(&registers, interrupts, mmu);
+    Timer *timer = new Timer(interrupts);
+    CPU *cpu = new CPU(&registers, interrupts, timer, mmu);
     PPU *ppu = new PPU(&registers, interrupts, mmu);
-    Timer *timer = new Timer(mmu, interrupts);
+    mmu->timer = timer;
 
     // Post-bootrom initialization
     cpu->no_bootrom_init();
@@ -53,7 +54,7 @@ static int run_headless(const std::string &rom, long long max_cycles, const std:
         mmu->clock.t_instr = 0;
         bool interrupted = interrupts->check();
         if (!interrupted) cpu->step();
-        timer->inc();
+        timer->tick(mmu->clock.t_instr);
         ppu->step();
         total_cycles += mmu->clock.t_instr;
     }
