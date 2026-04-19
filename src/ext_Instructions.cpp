@@ -1,8 +1,6 @@
 #include "instructions.h"
 
 void InstructionSet::extended_execute(uint8_t opcode) {
-    mmu->clock.t_instr += extendedInstructionTicks[opcode];
-
     switch (opcode) {
         case 0x00:  // RLC B
             rlc(&registers->b);
@@ -247,12 +245,8 @@ void InstructionSet::extended_execute(uint8_t opcode) {
             bit(1 << 0, registers->l);
             break;
         case 0x46:  // BIT 0, (HL)
-        {
-            uint8_t value = mmu->read_byte(registers->hl);
-            bit(1 << 0, value);
-            mmu->write_byte(registers->hl, value);
+            bit(1 << 0, mmu->read_byte(registers->hl));
             break;
-        }
         case 0x47:  // BIT 0, A
             bit(1 << 0, registers->a);
             break;
@@ -276,12 +270,8 @@ void InstructionSet::extended_execute(uint8_t opcode) {
             bit(1 << 1, registers->l);
             break;
         case 0x4E:  // BIT 1, (HL)
-        {
-            uint8_t value = mmu->read_byte(registers->hl);
-            bit(1 << 1, value);
-            mmu->write_byte(registers->hl, value);
+            bit(1 << 1, mmu->read_byte(registers->hl));
             break;
-        }
         case 0x4F:  // BIT 1, A
             bit(1 << 1, registers->a);
             break;
@@ -304,12 +294,8 @@ void InstructionSet::extended_execute(uint8_t opcode) {
             bit(1 << 2, registers->l);
             break;
         case 0x56:  // BIT 2, (HL)
-        {
-            uint8_t value = mmu->read_byte(registers->hl);
-            bit(1 << 2, value);
-            mmu->write_byte(registers->hl, value);
+            bit(1 << 2, mmu->read_byte(registers->hl));
             break;
-        }
         case 0x57:  // BIT 2, A
             bit(1 << 2, registers->a);
             break;
@@ -332,12 +318,8 @@ void InstructionSet::extended_execute(uint8_t opcode) {
             bit(1 << 3, registers->l);
             break;
         case 0x5E:  // BIT 3, (HL)
-        {
-            uint8_t value = mmu->read_byte(registers->hl);
-            bit(1 << 3, value);
-            mmu->write_byte(registers->hl, value);
+            bit(1 << 3, mmu->read_byte(registers->hl));
             break;
-        }
         case 0x5F:  // BIT 3, A
             bit(1 << 3, registers->a);
             break;
@@ -360,12 +342,8 @@ void InstructionSet::extended_execute(uint8_t opcode) {
             bit(1 << 4, registers->l);
             break;
         case 0x66:  // BIT 4, (HL)
-        {
-            uint8_t value = mmu->read_byte(registers->hl);
-            bit(1 << 4, value);
-            mmu->write_byte(registers->hl, value);
+            bit(1 << 4, mmu->read_byte(registers->hl));
             break;
-        }
         case 0x67:  // BIT 4, A
             bit(1 << 4, registers->a);
             break;
@@ -388,12 +366,8 @@ void InstructionSet::extended_execute(uint8_t opcode) {
             bit(1 << 5, registers->l);
             break;
         case 0x6E:  // BIT 5, (HL)
-        {
-            uint8_t value = mmu->read_byte(registers->hl);
-            bit(1 << 5, value);
-            mmu->write_byte(registers->hl, value);
+            bit(1 << 5, mmu->read_byte(registers->hl));
             break;
-        }
         case 0x6F:  // BIT 5, A
             bit(1 << 5, registers->a);
             break;
@@ -416,12 +390,8 @@ void InstructionSet::extended_execute(uint8_t opcode) {
             bit(1 << 6, registers->l);
             break;
         case 0x76:  // BIT 6, (HL)
-        {
-            uint8_t value = mmu->read_byte(registers->hl);
-            bit(1 << 6, value);
-            mmu->write_byte(registers->hl, value);
+            bit(1 << 6, mmu->read_byte(registers->hl));
             break;
-        }
         case 0x77:  // BIT 6, A
             bit(1 << 6, registers->a);
             break;
@@ -444,12 +414,8 @@ void InstructionSet::extended_execute(uint8_t opcode) {
             bit(1 << 7, registers->l);
             break;
         case 0x7E:  // BIT 7, (HL)
-        {
-            uint8_t value = mmu->read_byte(registers->hl);
-            bit(1 << 7, value);
-            mmu->write_byte(registers->hl, value);
+            bit(1 << 7, mmu->read_byte(registers->hl));
             break;
-        }
         case 0x7F:  // BIT 7, A
             bit(1 << 7, registers->a);
             break;

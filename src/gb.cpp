@@ -1,11 +1,12 @@
 #include "gb.h"
 
-void GB::init(std::string rom, bool no_bootrom, std::string bootrom, std::string save_file, bool debug, bool sound) {
+void GB::init(std::string rom, bool no_bootrom, std::string bootrom, std::string save_file, bool debug, bool sound,
+              bool headless) {
     Cartridge *cartridge = new Cartridge(rom, save_file);
-    this->init(cartridge, no_bootrom, bootrom, debug, sound);
+    this->init(cartridge, no_bootrom, bootrom, debug, sound, headless);
 }
 
-void GB::init(Cartridge *cartridge, bool no_bootrom, std::string bootrom, bool debug, bool sound) {
+void GB::init(Cartridge *cartridge, bool no_bootrom, std::string bootrom, bool debug, bool sound, bool headless) {
     this->cartridge = cartridge;
     mmu = new MMU(cartridge);
 
@@ -14,8 +15,18 @@ void GB::init(Cartridge *cartridge, bool no_bootrom, std::string bootrom, bool d
     cpu = new CPU(&registers, interrupts, timer, mmu);
     ppu = new PPU(&registers, interrupts, mmu);
     mmu->timer = timer;
-    joypad = new Joypad(&status, interrupts, mmu);
+    apu = new APU(&status, mmu, !sound || headless);
     status.debug = debug;
+
+    if (!headless) {
+        joypad = new Joypad(&status, interrupts, mmu);
+
+        if (debug)
+            renderer = new DebugRenderer(&status, cpu, ppu, &registers, interrupts, mmu);
+        else
+            renderer = new Renderer(&status, cpu, ppu, &registers, interrupts, mmu);
+        renderer->init();
+    }
 
     if (no_bootrom)
         cpu->no_bootrom_init();
@@ -24,33 +35,25 @@ void GB::init(Cartridge *cartridge, bool no_bootrom, std::string bootrom, bool d
     else
         mmu->load_default_boot_rom();
 
-    if (sound)
-        apu = new APU(&status, mmu);
-
-    if (debug)
-        renderer = new DebugRenderer(&status, cpu, ppu, &registers, interrupts, mmu);
-    else
-        renderer = new Renderer(&status, cpu, ppu, &registers, interrupts, mmu);
-    renderer->init();
-
     status.isRunning = true;
 }
 
 bool GB::run_step() {
+    mmu->clock.t_instr = 0;
+
     if (!status.isPaused || status.doStep) {
-        mmu->clock.t_instr = 0;
         bool interrupted = interrupts->check();
         if (!interrupted)
             cpu->step();
-
-        timer->tick(mmu->clock.t_instr);
         ppu->step();
     }
 
     status.doStep = false;
-    joypad->check(mmu->clock.t_instr);
 
-    if (ppu->can_render || status.isPaused) {
+    if (joypad)
+        joypad->check(mmu->clock.t_instr);
+
+    if (renderer && (ppu->can_render || status.isPaused)) {
         renderer->render();
         ppu->can_render = false;
         return true;

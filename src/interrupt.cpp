@@ -9,24 +9,16 @@ void Interrupts::set_master_flag(bool state) { this->IME = (int(state) << 0); }
 
 bool Interrupts::is_master_enabled() { return this->IME & 1U; }
 
-void Interrupts::set_interrupt_flag(uint8_t flag) {
-    uint8_t IF_value = mmu->read_byte(0xFF0F);
-    IF_value |= flag;
-    return mmu->write_byte(0xFF0F, IF_value);
-}
+void Interrupts::set_interrupt_flag(uint8_t flag) { mmu->memory[0xFF0F] |= flag; }
 
-void Interrupts::unset_interrupt_flag(uint8_t flag) {
-    uint8_t IF_value = mmu->read_byte(0xFF0F);
-    IF_value &= ~flag;
-    return mmu->write_byte(0xFF0F, IF_value);
-}
+void Interrupts::unset_interrupt_flag(uint8_t flag) { mmu->memory[0xFF0F] &= ~flag; }
 
-bool Interrupts::is_interrupt_enabled(uint8_t flag) { return (mmu->read_byte(0xFFFF) & flag); }
+bool Interrupts::is_interrupt_enabled(uint8_t flag) { return (mmu->memory[0xFFFF] & flag); }
 
-bool Interrupts::is_interrupt_flag_set(uint8_t flag) { return (mmu->read_byte(0xFF0F) & flag); }
+bool Interrupts::is_interrupt_flag_set(uint8_t flag) { return (mmu->memory[0xFF0F] & flag); }
 
 bool Interrupts::check() {
-    if (mmu->read_byte(0xFFFF) & mmu->read_byte(0xFF0F) & 0x0F)
+    if (mmu->memory[0xFFFF] & mmu->memory[0xFF0F] & 0x0F)
         mmu->is_halted = false;
 
     if (!this->is_master_enabled())
@@ -60,11 +52,13 @@ bool Interrupts::check() {
 }
 
 void Interrupts::trigger_interrupt(InterruptFlags interrupt, uint8_t jump_pc) {
-    this->mmu->write_short_stack(&registers->sp, this->registers->pc);
+    mmu->tick(8);
+    mmu->write_short_stack(&registers->sp, this->registers->pc);
+
     this->registers->pc = jump_pc;
     this->set_master_flag(false);
     this->unset_interrupt_flag(interrupt);
     mmu->is_halted = false;
 
-    mmu->clock.t_instr = 20;
+    mmu->tick(4);
 }

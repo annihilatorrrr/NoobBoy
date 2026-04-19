@@ -58,43 +58,54 @@ void MMU::UpdatePalette(Colour *palette, uint8_t value) {
     palette[3] = palette_colours[(value >> 6) & 0x3];
 }
 
+
+// TODO: Add an option to read without ticking
 uint8_t MMU::read_byte(uint16_t address) {
+    uint8_t value;
+
     if (address == 0xff00) {
         switch (memory[0xff00] & 0x30) {  // Mask `00110000` to check which SELECT
             case 0x10:
-                return (uint8_t)(joypad & 0x0F) | 0x10;
+                value = (uint8_t)(joypad & 0x0F) | 0x10;
+                break;
             case 0x20:
-                return (uint8_t)(joypad >> 4) & 0x0F | 0x20;
+                value = (uint8_t)(joypad >> 4) & 0x0F | 0x20;
+                break;
             default:
-                return 0xFF;
+                value = 0xFF;
+                break;
         }
     }
 
     // Timers
     else if (address == 0xff04)
-        return timer->read_div();
+        value = timer->read_div();
     else if (address == 0xff05)
-        return timer->read_tima();
+        value = timer->read_tima();
     else if (address == 0xff06)
-        return timer->read_tma();
+        value = timer->read_tma();
     else if (address == 0xff07)
-        return timer->read_tac();
+        value = timer->read_tac();
 
-    if (address == 0xff0f)
-        return memory[0xFF0F];
+    else if (address == 0xff0f)
+        value = memory[0xFF0F];
 
-    if (address < 0x100 && !romDisabled)
-        return memory[address];
+    else if (address < 0x100 && !romDisabled)
+        value = memory[address];
 
     // Switchable ROM banks
-    if (address < 0x8000)
-        return cartridge->mbc_read(address);
+    else if (address < 0x8000)
+        value = cartridge->mbc_read(address);
 
     // Switchable RAM banks
-    if (address >= 0xA000 && address <= 0xBFFF)
-        return cartridge->mbc_read(address);
+    else if (address >= 0xA000 && address <= 0xBFFF)
+        value = cartridge->mbc_read(address);
 
-    return memory[address];
+    else
+        value = memory[address];
+
+    tick(4);
+    return value;
 }
 
 void MMU::write_byte(uint16_t address, uint8_t value) {
@@ -102,6 +113,7 @@ void MMU::write_byte(uint16_t address, uint8_t value) {
     if (address == 0xFF02 && value == 0x81) {
         serial_output += static_cast<char>(memory[0xFF01]);
         memory[0xFF02] = 0x00;
+        tick(4);
         return;
     }
 
@@ -113,12 +125,20 @@ void MMU::write_byte(uint16_t address, uint8_t value) {
         }
     }
 
-    if (address >= 0xFEA0 && address <= 0xFEFF)  // Writing in unused area
+    if (address >= 0xFEA0 && address <= 0xFEFF) {  // Writing in unused area
+        tick(4);
         return;
+    }
 
-    // Copy Sprites from ROM to RAM (OAM)
-    if (address == 0xFF46)
-        for (uint16_t i = 0; i < 160; i++) write_byte(0xFE00 + i, read_byte((value << 8) + i));
+    // Copy Sprites from ROM to RAM (OAM DMA)
+    if (address == 0xFF46) {
+        uint16_t src = value << 8;
+        for (uint16_t i = 0; i < 160; i++) {
+            uint8_t byte = (src < 0x8000) ? cartridge->mbc_read(src + i) : memory[src + i];
+            memory[0xFE00 + i] = byte;
+            UpdateSprite(0xFE00 + i, byte);
+        }
+    }
 
     if (address == 0xff50)
         romDisabled = true;
@@ -154,6 +174,8 @@ void MMU::write_byte(uint16_t address, uint8_t value) {
 
     if (address >= 0xFE00 && address <= 0xFE9F)
         UpdateSprite(address, value);
+
+    tick(4);
 }
 
 uint16_t MMU::read_short(uint16_t address) { return read_byte(address) | (read_byte(address + 1) << 8); }
@@ -164,13 +186,20 @@ void MMU::write_short(uint16_t address, uint16_t value) {
 }
 
 void MMU::write_short_stack(uint16_t *sp, uint16_t value) {
-    *sp -= 2;
-    write_short(*sp, value);
+    (*sp)--;
+    write_byte(*sp, (uint8_t)((value & 0xff00) >> 8));
+    (*sp)--;
+    write_byte(*sp, (uint8_t)(value & 0x00ff));
 }
 
 uint16_t MMU::read_short_stack(uint16_t *sp) {
     uint16_t value = read_short(*sp);
     *sp += 2;
-
     return value;
+}
+
+void MMU::tick(int cycles) {
+    clock.t += cycles;
+    clock.t_instr += cycles;
+    timer->tick(cycles);
 }

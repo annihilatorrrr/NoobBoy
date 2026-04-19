@@ -40,7 +40,7 @@ void PPU::step() {
                 } else if (stat->oam_interrupt)
                     interrupts->set_interrupt_flag(INTERRUPT_LCD);
 
-                mmu->write_byte(0xff41, (mmu->read_byte(0xff41) & 0xFC) | (mode & 3));
+                mmu->memory[0xff41] = (mmu->memory[0xff41] & 0xFC) | (mode & 3);
             }
             break;
         case 1:  // VBLANK
@@ -52,7 +52,7 @@ void PPU::step() {
                     *scanline = 0;
                     window_line = 0;
                     mode = 2;
-                    mmu->write_byte(0xff41, (mmu->read_byte(0xff41) & 0xFC) | (mode & 3));
+                    mmu->memory[0xff41] = (mmu->memory[0xff41] & 0xFC) | (mode & 3);
                     if (stat->oam_interrupt)
                         interrupts->set_interrupt_flag(INTERRUPT_LCD);
                 }
@@ -63,7 +63,7 @@ void PPU::step() {
             if (modeclock >= 80) {
                 modeclock -= 80;
                 mode = 3;
-                mmu->write_byte(0xff41, (mmu->read_byte(0xff41) & 0xFC) | (mode & 3));
+                mmu->memory[0xff41] = (mmu->memory[0xff41] & 0xFC) | (mode & 3);
             }
             break;
         case 3:  // VRAM
@@ -71,7 +71,7 @@ void PPU::step() {
                 modeclock -= 172;
                 mode = 0;
                 render_scan_lines();
-                mmu->write_byte(0xff41, (mmu->read_byte(0xff41) & 0xFC) | (mode & 3));
+                mmu->memory[0xff41] = (mmu->memory[0xff41] & 0xFC) | (mode & 3);
 
                 if (stat->hblank_interrupt)
                     interrupts->set_interrupt_flag(INTERRUPT_LCD);
@@ -81,7 +81,8 @@ void PPU::step() {
 }
 
 void PPU::compare_ly_lyc() {
-    uint8_t lyc = mmu->read_byte(0xFF45);
+    // TODO: Modify so that we don't access the address directly and use read_byte
+    uint8_t lyc = mmu->memory[0xFF45];
     stat->coincidence_flag = int(lyc == *scanline);
 
     if (lyc == *scanline && stat->coincidence_interrupt)
@@ -125,7 +126,7 @@ void PPU::render_scan_line_background(bool* row_pixels) {
         if (tile_address >= end_row_address)
             tile_address = (start_row_address + tile_address % end_row_address);
 
-        int tile = this->mmu->read_byte(tile_address);
+        int tile = this->mmu->memory[tile_address];
         if (!this->control->bgWindowDataSelect && tile < 128)
             tile += 256;
 
@@ -147,8 +148,8 @@ void PPU::render_scan_line_window(bool* row_pixels) {
     if (!this->control->bgDisplay || !this->control->windowEnable)
         return;
 
-    int wy = mmu->read_byte(0xFF4A);
-    int wx = mmu->read_byte(0xFF4B) - 7;
+    int wy = mmu->memory[0xFF4A];
+    int wx = mmu->memory[0xFF4B] - 7;
 
     if (*this->scanline < wy || wx > 159)
         return;
@@ -160,7 +161,7 @@ void PPU::render_scan_line_window(bool* row_pixels) {
     int pixelOffset = *this->scanline * 160;
 
     for (int i = 0; i < 20; i++) {
-        int tile = this->mmu->read_byte(address + i);
+        int tile = this->mmu->memory[address + i];
         if (!this->control->bgWindowDataSelect && tile < 128)
             tile += 256;
         

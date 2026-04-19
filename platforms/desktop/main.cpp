@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
     }
 
     GB gameboy;
-    gameboy.init(rom, no_bootrom, bootrom, save_file, debug_flag, sound_flag);
+    gameboy.init(rom, no_bootrom, bootrom, save_file, debug_flag, sound_flag, false);
     gameboy.run();
 
     return 0;

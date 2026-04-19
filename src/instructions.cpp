@@ -7,9 +7,7 @@ InstructionSet::InstructionSet(Registers *registers, Interrupts *interrupts, MMU
     this->interrupts = interrupts;
 }
 void InstructionSet::execute(uint8_t opcode) {
-    mmu->clock.t_instr += instructionTicks[opcode];
-
-    switch (opcode) {
+     switch (opcode) {
         case 0x00:  // NOP
             break;
         case 0x01:  // LD BC, nn
@@ -21,6 +19,7 @@ void InstructionSet::execute(uint8_t opcode) {
             break;
         case 0x03:  // INC BC
             registers->bc++;
+            mmu->tick(4);
             break;
         case 0x04:  // INC B
             inc(&registers->b);
@@ -41,12 +40,14 @@ void InstructionSet::execute(uint8_t opcode) {
             break;
         case 0x09:  // ADD HL, BC
             add(&registers->hl, registers->bc);
+            mmu->tick(4);
             break;
         case 0x0A:  // LD A, (BC)
             registers->a = mmu->read_byte(registers->bc);
             break;
         case 0x0B:  // DEC BC
             registers->bc--;
+            mmu->tick(4);
             break;
         case 0x0C:  // INC C
             inc(&registers->c);
@@ -72,6 +73,7 @@ void InstructionSet::execute(uint8_t opcode) {
             break;
         case 0x13:  // INC DE
             registers->de++;
+            mmu->tick(4);
             break;
         case 0x14:  // INC D
             inc(&registers->d);
@@ -88,17 +90,20 @@ void InstructionSet::execute(uint8_t opcode) {
             break;
         case 0x18:  // JR nn
         {
-            uint8_t operand = mmu->read_byte(registers->pc++);
-            registers->pc += (int8_t)(operand);
+            int8_t offset = (int8_t)mmu->read_byte(registers->pc++);
+            registers->pc += offset;
+            mmu->tick(4);
         } break;
         case 0x19:  // ADD HL, DE
             add(&registers->hl, registers->de);
+            mmu->tick(4);
             break;
         case 0x1A:  // LD A, (DE)
             registers->a = mmu->read_byte(registers->de);
             break;
         case 0x1B:  // DEC DE
             registers->de--;
+            mmu->tick(4);
             break;
         case 0x1C:  // INC E
             inc(&registers->e);
@@ -125,6 +130,7 @@ void InstructionSet::execute(uint8_t opcode) {
             break;
         case 0x23:  // INC HL
             registers->hl++;
+            mmu->tick(4);
             break;
         case 0x24:  // INC H
             inc(&registers->h);
@@ -168,12 +174,14 @@ void InstructionSet::execute(uint8_t opcode) {
             break;
         case 0x29:  // ADD HL, HL
             add(&registers->hl, registers->hl);
+            mmu->tick(4);
             break;
         case 0x2A:  // LD A, (HL+)
             registers->a = mmu->read_byte(registers->hl++);
             break;
         case 0x2B:  // DEC HL
             registers->hl--;
+            mmu->tick(4);
             break;
         case 0x2C:  // INC L
             inc(&registers->l);
@@ -200,6 +208,7 @@ void InstructionSet::execute(uint8_t opcode) {
             break;
         case 0x33:  // INC SP
             registers->sp++;
+            mmu->tick(4);
             break;
         case 0x35:  // DEC (HL)
         {
@@ -227,12 +236,14 @@ void InstructionSet::execute(uint8_t opcode) {
             break;
         case 0x39:  // ADD HL, SP
             add(&registers->hl, registers->sp);
+            mmu->tick(4);
             break;
         case 0x3A:  // LD A, (HL-)
             registers->a = mmu->read_byte(registers->hl--);
             break;
         case 0x3B:  // DEC SP
             registers->sp--;
+            mmu->tick(4);
             break;
         case 0x3C:  // INC A
             inc(&registers->a);
@@ -405,7 +416,7 @@ void InstructionSet::execute(uint8_t opcode) {
             mmu->write_byte(registers->hl, registers->l);
             break;
         case 0x76:  // HALT
-            if (!interrupts->is_master_enabled() && (mmu->read_byte(0xFF0F) & mmu->read_byte(0xFFFF) & 0x1F)) {
+            if (!interrupts->is_master_enabled() && (mmu->memory[0xFF0F] & mmu->memory[0xFFFF] & 0x1F)) {
                 mmu->trigger_halt_bug = true;
                 mmu->is_halted = false;
             } else
@@ -640,18 +651,21 @@ void InstructionSet::execute(uint8_t opcode) {
             break;
         case 0xC3:  // JP nn
             registers->pc = mmu->read_short(registers->pc);
+            mmu->tick(4);
             break;
         case 0xC4:  // CALL NZ, nn
             call(!registers->is_flag_set(FLAG_ZERO));
             break;
         case 0xC5:  // PUSH BC
+            mmu->tick(4);
             mmu->write_short_stack(&registers->sp, registers->bc);
             break;
         case 0xC6:  // ADD A, n
             add(&registers->a, mmu->read_byte(registers->pc++));
             break;
         case 0xC7:  // RST $00
-            mmu->write_short_stack(&registers->sp, registers->pc++);
+            mmu->tick(4);
+            mmu->write_short_stack(&registers->sp, registers->pc);
             registers->pc = 0x0000;
             break;
         case 0xC8:  // RET Z
@@ -659,6 +673,7 @@ void InstructionSet::execute(uint8_t opcode) {
             break;
         case 0xC9:  // RET
             registers->pc = mmu->read_short_stack(&registers->sp);
+            mmu->tick(4);
             break;
         case 0xCA:  // JP Z, nn
             jump(registers->is_flag_set(FLAG_ZERO));
@@ -675,6 +690,7 @@ void InstructionSet::execute(uint8_t opcode) {
         {
             uint16_t operand = mmu->read_short(registers->pc);
             registers->pc += 2;
+            mmu->tick(4);
             mmu->write_short_stack(&registers->sp, registers->pc);
             registers->pc = operand;
         } break;
@@ -682,7 +698,8 @@ void InstructionSet::execute(uint8_t opcode) {
             adc(mmu->read_byte(registers->pc++));
             break;
         case 0xCF:  // RST $08
-            mmu->write_short_stack(&registers->sp, registers->pc++);
+            mmu->tick(4);
+            mmu->write_short_stack(&registers->sp, registers->pc);
             registers->pc = 0x0008;
             break;
         case 0xD0:  // RET NC
@@ -698,13 +715,15 @@ void InstructionSet::execute(uint8_t opcode) {
             call(!registers->is_flag_set(FLAG_CARRY));
             break;
         case 0xD5:  // PUSH DE
+            mmu->tick(4);
             mmu->write_short_stack(&registers->sp, registers->de);
             break;
         case 0xD6:  // SUB n
             sub(mmu->read_byte(registers->pc++));
             break;
         case 0xD7:  // RST $10
-            mmu->write_short_stack(&registers->sp, registers->pc++);
+            mmu->tick(4);
+            mmu->write_short_stack(&registers->sp, registers->pc);
             registers->pc = 0x0010;
             break;
         case 0xD8:  // RET C
@@ -713,6 +732,7 @@ void InstructionSet::execute(uint8_t opcode) {
         case 0xD9:  // RETI
             interrupts->set_master_flag(true);
             registers->pc = mmu->read_short_stack(&registers->sp);
+            mmu->tick(4);
             break;
         case 0xDA:  // JP C, nn
             jump(registers->is_flag_set(FLAG_CARRY));
@@ -724,7 +744,8 @@ void InstructionSet::execute(uint8_t opcode) {
             sbc(mmu->read_byte(registers->pc++));
             break;
         case 0xDF:  // RST $18
-            mmu->write_short_stack(&registers->sp, registers->pc++);
+            mmu->tick(4);
+            mmu->write_short_stack(&registers->sp, registers->pc);
             registers->pc = 0x0018;
             break;
         case 0xE0:  // LD ($FF00+n), A
@@ -737,17 +758,20 @@ void InstructionSet::execute(uint8_t opcode) {
             mmu->write_byte(0xff00 + registers->c, registers->a);
             break;
         case 0xE5:  // PUSH HL
+            mmu->tick(4);
             mmu->write_short_stack(&registers->sp, registers->hl);
             break;
         case 0xE6:  // AND n
             and_(mmu->read_byte(registers->pc++));
             break;
         case 0xE7:  // RST $20
-            mmu->write_short_stack(&registers->sp, registers->pc++);
+            mmu->tick(4);
+            mmu->write_short_stack(&registers->sp, registers->pc);
             registers->pc = 0x0020;
             break;
         case 0xE8:  // ADD SP, n
             add(&registers->sp, (int8_t)mmu->read_byte(registers->pc++));
+            mmu->tick(8);
             break;
         case 0xE9:  // JP HL
             registers->pc = registers->hl;
@@ -760,7 +784,8 @@ void InstructionSet::execute(uint8_t opcode) {
             xor_(mmu->read_byte(registers->pc++));
             break;
         case 0xEF:  // RST $28
-            mmu->write_short_stack(&registers->sp, registers->pc++);
+            mmu->tick(4);
+            mmu->write_short_stack(&registers->sp, registers->pc);
             registers->pc = 0x0028;
             break;
         case 0xF0:  // LD A, ($FF00+n)
@@ -777,20 +802,24 @@ void InstructionSet::execute(uint8_t opcode) {
             interrupts->set_master_flag(false);
             break;
         case 0xF5:  // PUSH AF
+            mmu->tick(4);
             mmu->write_short_stack(&registers->sp, registers->af);
             break;
         case 0xF6:  // OR n
             or_(mmu->read_byte(registers->pc++));
             break;
         case 0xF7:  // RST $30
-            mmu->write_short_stack(&registers->sp, registers->pc++);
+            mmu->tick(4);
+            mmu->write_short_stack(&registers->sp, registers->pc);
             registers->pc = 0x0030;
             break;
         case 0xF8:  // LDHL SP, n
             ldhl(mmu->read_byte(registers->pc++));
+            mmu->tick(4);
             break;
         case 0xF9:  // LD SP, HL
             registers->sp = registers->hl;
+            mmu->tick(4);
             break;
         case 0xFA:  // LD A, (nn)
             registers->a = mmu->read_byte(mmu->read_short(registers->pc));
@@ -803,12 +832,13 @@ void InstructionSet::execute(uint8_t opcode) {
             cp_n(mmu->read_byte(registers->pc++));
             break;
         case 0xFF:  // RST $38
-            mmu->write_short_stack(&registers->sp, registers->pc++);
+            mmu->tick(4);
+            mmu->write_short_stack(&registers->sp, registers->pc);
             registers->pc = 0x0038;
             break;
         default:
-            std::cout << "FF40: " << +(mmu->read_byte(0xFF40)) << " FF41: " << +(mmu->read_byte(0xFF41))
-                      << " FF42: " << +(mmu->read_byte(0xFF42)) << " FF44: " << +(mmu->read_byte(0xFF44)) << std::endl;
+            std::cout << "FF40: " << +(mmu->memory[0xFF40]) << " FF41: " << +(mmu->memory[0xFF41])
+                      << " FF42: " << +(mmu->memory[0xFF42]) << " FF44: " << +(mmu->memory[0xFF44]) << std::endl;
             registers->print_flags();
             registers->print_registers();
             printf("Unsupported opcode: 0x%02x at 0x%04x\n", opcode, this->registers->pc);
@@ -827,40 +857,36 @@ void InstructionSet::call(bool condition) {
     uint16_t operand = mmu->read_short(registers->pc);
     registers->pc += 2;
 
-    mmu->clock.t_instr += 12;
     if (condition) {
+        mmu->tick(4);
         mmu->write_short_stack(&registers->sp, registers->pc);
         registers->pc = operand;
-        mmu->clock.t_instr += 12;
     }
 }
 
 void InstructionSet::ret(bool condition) {
+    mmu->tick(4);
     if (condition) {
         registers->pc = mmu->read_short_stack(&registers->sp);
-        mmu->clock.t_instr += 20;
-    } else {
-        mmu->clock.t_instr += 8;
+        mmu->tick(4);
     }
 }
 
 void InstructionSet::jump_add(bool condition) {
+    int8_t offset = (int8_t)mmu->read_byte(registers->pc++);
     if (condition) {
-        registers->pc += 1 + (int8_t)(mmu->read_byte(registers->pc));
-        mmu->clock.t_instr += 12;
-    } else {
-        registers->pc++;
-        mmu->clock.t_instr += 8;
+        registers->pc += offset;
+        mmu->tick(4);
     }
 }
 
 void InstructionSet::jump(bool condition) {
+    uint16_t addr = mmu->read_short(registers->pc);
     if (condition) {
-        registers->pc = mmu->read_short(registers->pc);
-        mmu->clock.t_instr += 16;
+        registers->pc = addr;
+        mmu->tick(4);
     } else {
         registers->pc += 2;
-        mmu->clock.t_instr += 12;
     }
 }
 void InstructionSet::inc(uint8_t *value) {

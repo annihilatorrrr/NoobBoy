@@ -137,8 +137,8 @@ class APU {
     Wave wave;
     Noise noise;
     Noise ch4;
-
-    APU(Status *status, MMU *mmu);
+    // TODO: Remove the headless option
+    APU(Status *status, MMU *mmu, bool headless = false);
 
     void init_audio();
 

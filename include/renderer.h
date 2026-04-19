@@ -42,7 +42,7 @@ class Renderer {
     float window_height = viewport_height;
     float window_width = viewport_width;
 
-    int framerate_time = 1000 / 60;
+    int framerate_time_us = 16742;  // microseconds per frame (1_000_000 / 59.7275 Hz)
     std::chrono::steady_clock::time_point startFrame;
     std::chrono::steady_clock::time_point endFrame;
     void check_framerate();

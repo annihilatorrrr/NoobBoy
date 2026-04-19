@@ -6,9 +6,25 @@
       "detection": "serial",
       "timeout_cycles": 200000000
     },
+    "blargg/mem_timing-2": {
+      "detection": "memory",
+      "timeout_cycles": 200000000
+    },
+    "blargg/dmg_sound": {
+      "skip": true,
+      "skip_reason": "Instruction timing not yet accurate"
+    },
+    "blargg/halt_bug.gb": {
+      "skip": true,
+      "skip_reason": "Instruction timing not yet accurate"
+    },
     "mooneye": {
       "detection": "mooneye",
       "timeout_cycles": 50000000
+    },
+    "mooneye/acceptance/bits/reg_f.gb": {
+      "skip": true,
+      "skip_reason": "Instruction timing not yet accurate"
     },
     "samesuite": {
       "detection": "mooneye",

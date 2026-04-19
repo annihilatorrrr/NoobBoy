@@ -31,9 +31,9 @@ void Renderer::init_window(float window_width, float window_height) {
 
 void Renderer::check_framerate() {
     endFrame = std::chrono::steady_clock::now();
-    auto timeTook = std::chrono::duration_cast<std::chrono::milliseconds>(endFrame - startFrame).count();
-    if (timeTook < framerate_time)
-        std::this_thread::sleep_for(std::chrono::milliseconds(framerate_time - timeTook));
+    auto timeTook = std::chrono::duration_cast<std::chrono::microseconds>(endFrame - startFrame).count();
+    if (timeTook < framerate_time_us)
+        std::this_thread::sleep_for(std::chrono::microseconds(framerate_time_us - timeTook));
 
     startFrame = std::chrono::steady_clock::now();
 }

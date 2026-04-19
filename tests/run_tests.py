@@ -10,7 +10,6 @@ import dataclasses
 import json
 import os
 import re
-import signal
 import subprocess
 import sys
 import threading
@@ -36,6 +35,7 @@ README_PATH = PROJECT_DIR / "README.md"
 GREEN = "\033[92m"
 RED = "\033[91m"
 YELLOW = "\033[93m"
+CYAN = "\033[96m"
 BOLD = "\033[1m"
 DIM = "\033[2m"
 RESET = "\033[0m"
@@ -64,9 +64,28 @@ STATUS_ICON = {
     Status.CRASH:   f"{RED}!{RESET}",
 }
 
+STATUS_MD_LABEL = {
+    Status.PASS: "Pass",
+    Status.FAIL: "**FAIL**",
+    Status.TIMEOUT: "Timeout",
+    Status.SKIPPED: "Skipped",
+    Status.CRASH: "**CRASH**",
+}
+
 STATUS_MD_ICON = {
-    Status.PASS: "✅", Status.FAIL: "❌", Status.TIMEOUT: "⏱",
-    Status.SKIPPED: "⊘", Status.CRASH: "💥",
+    Status.PASS:    '<span style="color:green">✓</span>',
+    Status.FAIL:    '<span style="color:orangered">✗</span>',
+    Status.TIMEOUT: '<span style="color:goldenrod">T</span>',
+    Status.SKIPPED: '<span style="color:gray">–</span>',
+    Status.CRASH:   '<span style="color:orangered">!</span>',
+}
+
+STATUS_MD_COLOR = {
+    Status.PASS:    'green',
+    Status.FAIL:    'orangered',
+    Status.TIMEOUT: 'goldenrod',
+    Status.SKIPPED: 'gray',
+    Status.CRASH:   'orangered',
 }
 
 
@@ -79,17 +98,17 @@ class TestInfo:
     suite: str
     subsuite: str
     is_gbc: bool
-    
+
     def as_skipped(self, reason: str) -> "TestResult":
-            """Convenience method to convert metadata into a skipped result."""
-            return TestResult(
-                name=self.name,
-                rel=self.rel,
-                suite=self.suite,
-                subsuite=self.subsuite,
-                status=Status.SKIPPED,
-                reason=reason
-            )
+        return TestResult(
+            name=self.name,
+            rel=self.rel,
+            suite=self.suite,
+            subsuite=self.subsuite,
+            status=Status.SKIPPED,
+            reason=reason,
+        )
+
 
 @dataclass
 class TestResult:
@@ -104,51 +123,47 @@ class TestResult:
 
 
 def load_config() -> dict:
-    """Load test suite configuration from config.json."""
     with open(CONFIG_PATH) as fh:
         return json.load(fh)
 
 
-def get_suite_config(config: dict, suite_name: str) -> dict:
-    """Return config for a suite, falling back to its top-level parent."""
+def get_suite_config(config: dict, rel: str, suite: str, subsuite: str = "") -> dict:
     suites = config.get("suites", {})
     
-    if suite_name in suites:
-        return suites[suite_name]
-
-    return suites.get(suite_name.split("/")[0], {})
-
+    if rel in suites:
+        return suites[rel]
+    
+    if subsuite and subsuite in suites:
+        return suites[subsuite]
+    
+    if suite in suites:
+        return suites[suite]
+        
+    return suites.get(suite.split("/")[0], {})
 
 def discover_tests(filter_pattern: Optional[str] = None) -> list[TestInfo]:
-    """Find all .gb/.gbc test ROMs under TESTROMS_DIR, optionally filtered by path prefix."""
     tests = []
     for rom_path in sorted(TESTROMS_DIR.rglob("*.gb*")):
         if not rom_path.is_file() or rom_path.suffix.lower() not in (".gb", ".gbc"):
             continue
-
         relative = rom_path.relative_to(TESTROMS_DIR)
         relative_str = str(relative)
-
         if filter_pattern and not relative_str.startswith(filter_pattern):
             continue
-
         parts = relative.parts
-        test_info = TestInfo(
+        tests.append(TestInfo(
             path=str(rom_path),
             rel=relative_str,
             name=rom_path.name,
             suite=parts[0] if len(parts) > 1 else "",
             subsuite="/".join(parts[:-1]),
             is_gbc=rom_path.suffix.lower() == ".gbc",
-        )
-        tests.append(test_info)
-
+        ))
     return tests
 
 
 def run_single_test(binary: str, info_dict: dict, config: dict) -> dict:
-    """Run one test ROM headlessly. Uses plain dicts for process-pool pickling."""
-    suite_conf = get_suite_config(config, info_dict["suite"])
+    suite_conf = get_suite_config(config, info_dict["rel"], info_dict["suite"], info_dict.get("subsuite", ""))
     timeout_cycles = suite_conf.get("timeout_cycles", config.get("default_timeout_cycles", 100_000_000))
     wall_timeout = suite_conf.get("wall_timeout_seconds", config.get("default_process_timeout_seconds", 120))
 
@@ -168,14 +183,16 @@ def run_single_test(binary: str, info_dict: dict, config: dict) -> dict:
 
     try:
         proc = subprocess.run(cmd, capture_output=True, text=True, timeout=wall_timeout)
-        status, serial = "fail", ""
+        status, serial_parts = "fail", []
         for line in proc.stdout.splitlines():
             if line.startswith("SERIAL:"):
-                serial = line[len("SERIAL:"):]
+                serial_parts.append(line[len("SERIAL:"):])
             elif line.startswith("RESULT:"):
                 tag = line[len("RESULT:"):].strip().upper()
                 if tag in ("PASS", "FAIL", "TIMEOUT"):
                     status = tag.lower()
+
+        serial = "\n".join(serial_parts)
 
         if proc.returncode != 0 and status == "fail":
             status = "crash"
@@ -188,7 +205,6 @@ def run_single_test(binary: str, info_dict: dict, config: dict) -> dict:
 
 
 def dict_to_result(raw: dict) -> TestResult:
-    """Convert a result dict from the subprocess back to a TestResult."""
     return TestResult(
         name=raw["name"],
         rel=raw["rel"],
@@ -201,7 +217,6 @@ def dict_to_result(raw: dict) -> TestResult:
 
 
 class LiveDisplay:
-    """Animated terminal display showing suite progress and active tests during execution."""
     def __init__(self, suite_stats: dict, total: int, workers: int):
         self._visible_suites = sorted(
             suite for suite, stats in suite_stats.items() if stats["runnable"] > 0
@@ -219,34 +234,26 @@ class LiveDisplay:
         self._thread: Optional[threading.Thread] = None
 
     def set_pending(self, rels: list[str]):
-        """Set the ordered list of pending test paths."""
         with self._lock:
             self._pending_rels = list(rels)
 
     def start(self):
-        """Start the render thread."""
         if IS_TTY:
             sys.stdout.write(HIDE_CURSOR)
             sys.stdout.flush()
-
         self._thread = threading.Thread(target=self._render_loop, daemon=True)
         self._thread.start()
 
     def stop(self):
-        """Stop rendering and clear the display area."""
         self._stop_event.set()
-
         if self._thread:
-            self._thread.join()
-
+            self._thread.join(timeout=1)
         self._erase()
-
         if IS_TTY:
             sys.stdout.write(SHOW_CURSOR)
             sys.stdout.flush()
 
     def mark_done(self, result: TestResult):
-        """Update stats when a test completes."""
         with self._lock:
             self._done_rels.add(result.rel)
             self._completed_count += 1
@@ -264,10 +271,8 @@ class LiveDisplay:
     def _render(self):
         if not IS_TTY:
             return
-
         with self._lock:
             output_lines = []
-
             for suite in self._visible_suites:
                 stats = self._suite_stats[suite]
                 passed, runnable = stats["passed"], stats["runnable"]
@@ -278,9 +283,7 @@ class LiveDisplay:
                 else:
                     color = DIM
                 output_lines.append(f"  {suite:<28} {color}{passed:>3}/{runnable}{RESET}")
-
             output_lines.append("")
-
             active_rels = [
                 rel for rel in self._pending_rels if rel not in self._done_rels
             ][:self._workers]
@@ -288,15 +291,12 @@ class LiveDisplay:
             for rel in active_rels:
                 display_name = rel if len(rel) <= 55 else "…" + rel[-54:]
                 output_lines.append(f"  {YELLOW}{spinner_char}{RESET} {DIM}{display_name}{RESET}")
-
             queued_count = len(self._pending_rels) - len(self._done_rels) - len(active_rels)
             if queued_count > 0:
                 output_lines.append(f"    {DIM}+{queued_count} queued{RESET}")
-
             output_lines.append("")
             percent = (self._completed_count * 100 // self._total) if self._total else 100
             output_lines.append(f"  {self._completed_count}/{self._total} completed ({percent}%)")
-
             self._erase()
             sys.stdout.write("\n".join(output_lines) + "\n")
             sys.stdout.flush()
@@ -310,65 +310,85 @@ class LiveDisplay:
 
 
 def count_statuses(results: list[TestResult]) -> dict[str, int]:
-    """Return a dict with counts per status value, plus 'total'."""
     counts = defaultdict(int)
-
     for result in results:
         counts[result.status.value] += 1
-
     counts["total"] = len(results)
     return counts
 
 
 def print_grouped_results(results: list[TestResult], verbose: bool = False):
-    """Print results grouped by subsuite with right-aligned pass counts."""
-    by_subsuite: dict[str, list[TestResult]] = defaultdict(list)
+    by_suite: dict[str, dict[str, list[TestResult]]] = defaultdict(lambda: defaultdict(list))
     for result in results:
-        by_subsuite[result.subsuite].append(result)
+        by_suite[result.suite][result.subsuite].append(result)
 
-    pad_width = 50
+    first_suite = True
+    for suite in sorted(by_suite):
+        subsuites = by_suite[suite]
 
-    for subsuite in sorted(by_subsuite):
-        group = by_subsuite[subsuite]
-        passed = sum(result.status == Status.PASS for result in group)
-        skipped = sum(result.status == Status.SKIPPED for result in group)
-        total = len(group)
-        runnable = total - skipped
+        suite_passed = sum(result.status == Status.PASS for sub in subsuites.values() for result in sub)
+        suite_skipped = sum(result.status == Status.SKIPPED for sub in subsuites.values() for result in sub)
+        suite_total = sum(len(sub) for sub in subsuites.values())
+        suite_runnable = suite_total - suite_skipped
 
-        display_name = subsuite or "(root)"
-        padding = max(2, pad_width - len(display_name))
+        if not first_suite:
+            print()
+        first_suite = False
 
-        if skipped == total:
-            label = f"{DIM}SKIP{RESET}"
-            print(f"  {BOLD}{display_name}{RESET}{' ' * padding}{label}")
-            reasons = sorted(set(result.reason or "Skipped" for result in group))
-            for reason in reasons:
-                print(f"     {DIM}{reason}{RESET}")
-        elif passed == runnable:
-            label = f"{GREEN}{passed}/{runnable}  PASS{RESET}"
-            print(f"  {BOLD}{display_name}{RESET}{' ' * padding}{label}")
+        if suite_runnable == 0:
+            print(f"  {DIM}{'─' * 40}{RESET}")
+            print(f"  {BOLD}{suite}{RESET}  {DIM}(skipped){RESET}")
+            continue
+
+        if suite_passed == suite_runnable:
+            suite_color = GREEN
+        elif suite_passed > 0:
+            suite_color = YELLOW
         else:
-            color = YELLOW if passed > 0 else RED
-            label = f"{color}{passed}/{runnable}{RESET}"
-            print(f"  {BOLD}{display_name}{RESET}{' ' * padding}{label}")
+            suite_color = RED
 
-            for result in group:
-                if result.status in (Status.PASS, Status.SKIPPED):
-                    continue
+        print(f"  {'─' * 40}")
+        print(f"  {BOLD}{suite}{RESET}  {suite_color}{suite_passed}/{suite_runnable}{RESET}")
+        print(f"  {'─' * 40}")
+
+        for subsuite in sorted(subsuites):
+            group = subsuites[subsuite]
+            passed = sum(result.status == Status.PASS for result in group)
+            skipped = sum(result.status == Status.SKIPPED for result in group)
+            total = len(group)
+            runnable = total - skipped
+
+            sub_label = subsuite.replace(suite + "/", "") if subsuite != suite else "(root)"
+
+            if skipped == total:
+                print(f"    {DIM}{sub_label}  (skipped){RESET}")
+                continue
+
+            if passed == runnable:
+                sub_color = GREEN
+            elif passed > 0:
+                sub_color = YELLOW
+            else:
+                sub_color = RED
+
+            print(f"    {sub_label}  {sub_color}{passed}/{runnable}{RESET}")
+
+            for result in sorted(group, key=lambda x: x.name):
                 icon = STATUS_ICON[result.status]
-                print(f"     {icon} {result.name}")
                 
-                if not verbose or not result.serial:
-                    continue
+                if result.status == Status.SKIPPED:
+                    print(f"      {icon} {DIM}{result.name} ({result.reason or 'Skipped'}){RESET}")
+                else:
+                    print(f"      {icon} {result.name}")
 
-                for serial_line in result.serial.splitlines()[:5]:
-                    print(f"       {DIM}{serial_line}{RESET}")
+                if verbose and result.serial and result.status != Status.PASS:
+                    for serial_line in result.serial.splitlines()[:8]:
+                        print(f"        {DIM}{serial_line}{RESET}")
 
-        print()
+    print()
 
 
 def print_summary(results: list[TestResult], elapsed: float, workers: int):
-    """Print an aligned summary block."""
     counts = count_statuses(results)
     divider = "-" * 40
 
@@ -392,8 +412,16 @@ def print_summary(results: list[TestResult], elapsed: float, workers: int):
     print()
 
 
+def _md_escape(text: str) -> str:
+    """Escape pipe characters and newlines for markdown table cells."""
+    return text.replace("|", "\\|").replace("\n", "<br>")
+
+
+def _md_color(text: str, color: str) -> str:
+    return f'<span style="color:{color}">{text}</span>'
+
+
 def generate_tests_md(results: list[TestResult]):
-    """Write tests/TESTS.md with a redesigned per-suite report."""
     counts = count_statuses(results)
     total_runnable = counts["total"] - counts["skipped"]
     pass_rate = (counts["pass"] / total_runnable * 100) if total_runnable else 0
@@ -403,82 +431,90 @@ def generate_tests_md(results: list[TestResult]):
         "",
         f"> Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
         "",
-        f"**{counts['pass']}** of **{total_runnable}** runnable tests passing ({pass_rate:.0f}%)",
-        f" · {counts['skipped']} skipped",
+        f"**{counts['pass']}** of **{total_runnable}** runnable tests passing ({pass_rate:.0f}%)"
+        f" — {counts['skipped']} skipped",
         "",
         "| | Count |",
-        "|---|--:|",
-        f"| Passed | {counts['pass']} |",
-        f"| Failed | {counts['fail']} |",
-        f"| Timeout | {counts['timeout']} |",
-        f"| Crashed | {counts['crash']} |",
-        f"| Skipped | {counts['skipped']} |",
+        "|:--|--:|",
+        f"| {_md_color('Passed', 'green')} | {counts['pass']} |",
+        f"| {_md_color('Failed', 'red')} | {counts['fail']} |",
+        f"| {_md_color('Timeout', 'goldenrod')} | {counts['timeout']} |",
+        f"| {_md_color('Crashed', 'red')} | {counts['crash']} |",
+        f"| {_md_color('Skipped', 'gray')} | {counts['skipped']} |",
         f"| **Total** | **{counts['total']}** |",
-        "",
-        "---",
         "",
     ]
 
-    by_subsuite = defaultdict(list)
+    by_suite: dict[str, dict[str, list[TestResult]]] = defaultdict(lambda: defaultdict(list))
     for result in results:
-        by_subsuite[result.subsuite].append(result)
+        by_suite[result.suite][result.subsuite].append(result)
 
-    current_suite = None
-    for subsuite in sorted(by_subsuite):
-        group = by_subsuite[subsuite]
-        suite = group[0].suite
-        passed = sum(result.status == Status.PASS for result in group)
-        skipped = sum(result.status == Status.SKIPPED for result in group)
-        total = len(group)
-        runnable = total - skipped
+    for suite in sorted(by_suite):
+        subsuites = by_suite[suite]
 
-        if suite != current_suite:
-            if current_suite is not None:
-                lines.append("---")
+        suite_passed = sum(result.status == Status.PASS for sub in subsuites.values() for result in sub)
+        suite_skipped = sum(result.status == Status.SKIPPED for sub in subsuites.values() for result in sub)
+        suite_total = sum(len(sub) for sub in subsuites.values())
+        suite_runnable = suite_total - suite_skipped
+
+        lines.append("---")
+        lines.append("")
+
+        if suite_runnable == 0:
+            lines.append(f"## {_md_color(suite, 'gray')} — Skipped")
+            lines.append("")
+            reasons = sorted(set(
+                result.reason or "Skipped"
+                for sub in subsuites.values() for result in sub if result.status == Status.SKIPPED
+            ))
+            for reason in reasons:
+                lines.append(f"*{reason}*")
+            lines.append("")
+            continue
+
+        suite_color = 'green' if suite_passed == suite_runnable else ('goldenrod' if suite_passed > 0 else 'red')
+        lines.append(f"## {suite} — {_md_color(f'{suite_passed}/{suite_runnable}', suite_color)}")
+        lines.append("")
+
+        for subsuite in sorted(subsuites):
+            group = subsuites[subsuite]
+            passed = sum(result.status == Status.PASS for result in group)
+            skipped = sum(result.status == Status.SKIPPED for result in group)
+            total = len(group)
+            runnable = total - skipped
+
+            heading = subsuite.replace(suite + "/", "") if subsuite != suite else "General"
+
+            if skipped == total:
+                lines.append(f"### {_md_color(heading, 'gray')} — Skipped")
                 lines.append("")
-            lines.append(f"## {suite}")
+                lines.append(f"*{group[0].reason or 'Skipped'}*")
+                lines.append("")
+                continue
+
+            sub_color = 'green' if passed == runnable else ('goldenrod' if passed > 0 else 'red')
+            lines.append(f"### {heading} — {_md_color(f'{passed}/{runnable}', sub_color)}")
             lines.append("")
-            current_suite = suite
+            lines.append("| | Test | Status | Output |")
+            lines.append("|:--|:--|:--|:--|")
 
-        heading = "General"
-        if subsuite != suite:
-            heading = "/".join(subsuite.split("/")[1:])
+            for result in sorted(group, key=lambda x: x.name):
+                if result.status == Status.SKIPPED:
+                    continue
+                icon = STATUS_MD_ICON.get(result.status, "")
+                color = STATUS_MD_COLOR.get(result.status, "")
+                status_text = _md_color(STATUS_MD_LABEL.get(result.status, "?"), color)
+                output = _md_escape(result.serial.strip()) if result.serial else result.reason or ""
+                if len(output) > 300:
+                    output = output[:300] + "..."
+                lines.append(f"| {icon} | {result.name} | {status_text} | {output} |")
 
-        if skipped == total:
-            lines.append(f"### {heading}")
             lines.append("")
-            lines.append(f"*{group[0].reason or 'Skipped'}*")
-            lines.append("")
-            continue
-
-        status_label = "✅" if passed == runnable else ""
-        lines.append(f"### {heading} — {passed}/{runnable} {status_label}")
-        lines.append("")
-
-        has_failures = any(result.status not in (Status.PASS, Status.SKIPPED) for result in group)
-        if passed == runnable:
-            lines.append("All tests passing.")
-            lines.append("")
-            continue
-
-        lines.append("<details>")
-        if has_failures:
-            lines.append("<summary>Details</summary>")
-        lines.append("")
-        lines.append("| Test | Result |")
-        lines.append("|---|---|")
-        for result in sorted(group, key=lambda r: r.name):
-            icon = STATUS_MD_ICON.get(result.status, "?")
-            lines.append(f"| {result.name} | {icon} |")
-        lines.append("")
-        lines.append("</details>")
-        lines.append("")
 
     TESTS_MD_PATH.write_text("\n".join(lines) + "\n")
 
 
 def save_results_json(results: list[TestResult]):
-    """Write tests/results.json with structured data."""
     counts = count_statuses(results)
 
     suites_data: dict = defaultdict(lambda: defaultdict(list))
@@ -500,7 +536,6 @@ def save_results_json(results: list[TestResult]):
 
 
 def update_readme_badges(results: list[TestResult]):
-    """Update shields.io badges between TEST_BADGES markers in README.md."""
     if not README_PATH.exists():
         return
 
@@ -513,7 +548,6 @@ def update_readme_badges(results: list[TestResult]):
     for result in results:
         if result.status == Status.SKIPPED:
             continue
-
         stats = suite_stats[result.suite]
         stats["total"] += 1
         stats["passed"] += int(result.status == Status.PASS)
@@ -535,36 +569,19 @@ def update_readme_badges(results: list[TestResult]):
 
 
 def extract_testroms():
-    """Extract testroms.zip into tests/testroms/ if the directory is empty or missing."""
     if TESTROMS_DIR.exists() and any(TESTROMS_DIR.iterdir()):
         return
-
     zip_path = SCRIPT_DIR / "testroms.zip"
     if not zip_path.exists():
         print(f"{RED}Error: tests/testroms.zip not found.{RESET}")
         sys.exit(1)
-
     print(f"{DIM}Extracting test ROMs...{RESET}")
     TESTROMS_DIR.mkdir(exist_ok=True)
-
     with zipfile.ZipFile(zip_path) as zf:
         zf.extractall(TESTROMS_DIR)
 
 
-def setup_signal_handler():
-    """Catch exit signals cleanly without traceback dumps."""
-    def handler(_sig, _frame):
-        if IS_TTY:
-            sys.stdout.write(SHOW_CURSOR)
-
-        print(f"\n  {RED}Interrupted.{RESET}\n")
-        sys.exit(1)
-
-    signal.signal(signal.SIGINT, handler)
-
-
 def list_suites(config: dict):
-    """Print available test suites from config.json."""
     suites = config.get("suites", {})
     print(f"\n  {BOLD}Available suites:{RESET}\n")
     for name in sorted(suites):
@@ -578,12 +595,10 @@ def list_suites(config: dict):
 
 
 def list_tests():
-    """Print all discovered test ROM paths."""
     tests = discover_tests()
     if not tests:
         print(f"{YELLOW}No tests found.{RESET}")
         return
-    
     print(f"\n  {BOLD}{len(tests)} test ROMs:{RESET}\n")
     for test in tests:
         suffix = f"  {DIM}(GBC){RESET}" if test.is_gbc else ""
@@ -592,7 +607,6 @@ def list_tests():
 
 
 def build_parser() -> argparse.ArgumentParser:
-    """Build the argument parser."""
     parser = argparse.ArgumentParser(
         prog="run_tests.py",
         description="Run the NoobBoy test suite against ROM-based tests.",
@@ -616,8 +630,6 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main():
-    """Entry point."""
-    setup_signal_handler()
     parser = build_parser()
     args = parser.parse_args()
 
@@ -628,7 +640,7 @@ def main():
         return
 
     extract_testroms()
-        
+
     if args.list_tests:
         list_tests()
         return
@@ -641,17 +653,15 @@ def main():
     all_tests = discover_tests(args.filter)
     if not all_tests:
         print(f"{YELLOW}No tests found.{RESET}")
-
         if args.filter:
             print(f"  Filter: {args.filter}")
-            
         sys.exit(0)
 
     all_results: list[TestResult] = []
     runnable_tests: list[TestInfo] = []
     for info in all_tests:
-        suite_conf = get_suite_config(config, info.suite)
-        
+        suite_conf = get_suite_config(config, info.rel, info.suite, info.subsuite)
+
         reason = None
         if info.is_gbc:
             reason = "GBC ROM (DMG only)"
@@ -661,13 +671,11 @@ def main():
         if not reason:
             runnable_tests.append(info)
             continue
-        
-        # Create the skipped test result
-        skipped_result = TestResult(
+
+        all_results.append(TestResult(
             info.name, info.rel, info.suite, info.subsuite,
-            Status.SKIPPED, reason=reason
-        )
-        all_results.append(skipped_result)
+            Status.SKIPPED, reason=reason,
+        ))
 
     suite_count = len({test.suite for test in all_tests})
     workers = args.jobs or min(os.cpu_count() or 4, max(1, len(runnable_tests)))
@@ -680,6 +688,7 @@ def main():
     print()
 
     elapsed = 0
+    display = None
     if runnable_tests:
         suite_stats: dict[str, dict] = defaultdict(lambda: {"passed": 0, "runnable": 0})
         for info in runnable_tests:
@@ -692,18 +701,22 @@ def main():
         run_results: list[TestResult] = []
         start_time = time.time()
 
-        with ProcessPoolExecutor(max_workers=workers) as executor:
-            futures = {
-                executor.submit(run_single_test, args.binary, dataclasses.asdict(info), config): info
-                for info in runnable_tests
-            }
-            for future in as_completed(futures):
-                result = dict_to_result(future.result())
-                run_results.append(result)
-                display.mark_done(result)
+        try:
+            with ProcessPoolExecutor(max_workers=workers) as executor:
+                futures = {
+                    executor.submit(run_single_test, args.binary, dataclasses.asdict(info), config): info
+                    for info in runnable_tests
+                }
+                for future in as_completed(futures):
+                    result = dict_to_result(future.result())
+                    run_results.append(result)
+                    display.mark_done(result)
+        except KeyboardInterrupt:
+            display.stop()
+            print(f"\n  {RED}Interrupted — {len(run_results)} of {len(runnable_tests)} tests completed.{RESET}\n")
+            sys.exit(1)
 
         display.stop()
-
         all_results += run_results
         elapsed = time.time() - start_time
 
@@ -723,7 +736,6 @@ def main():
     print()
 
     if any(result.status not in (Status.PASS, Status.SKIPPED) for result in all_results):
-        print(f"  {RED}Some tests failed.{RESET}\n")
         sys.exit(1)
 
 

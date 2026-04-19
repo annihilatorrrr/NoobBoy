@@ -6,10 +6,12 @@
 #include <stdio.h>
 #include <unistd.h>
 
-APU::APU(Status *status, MMU *mmu) {
+APU::APU(Status *status, MMU *mmu, bool headless) {
     this->status = status;
     this->mmu = mmu;
-    init_audio();
+    // TODO: Remove the headless check and just initialise audio correctly
+    if (!headless)
+        init_audio();
 }
 
 void APU::init_audio() {

@@ -25,9 +25,10 @@ void CPU::no_bootrom_init() {
     registers->set_flags(FLAG_SUBTRACT, false);
 
     memory->romDisabled = true;
+    // TODO: Modify to use write_byte instead of direct memory access
     memory->memory[0xFF0F] = 0xE1;
-    memory->write_byte(0xFF41, 0x80);
-    memory->write_byte(0xFF40, 0x91);
+    memory->memory[0xFF41] = 0x80;
+    memory->memory[0xFF40] = 0x91;
 
     timer->set_counter(0xD300);
     timer->write_tima(0x00);
@@ -37,7 +38,7 @@ void CPU::no_bootrom_init() {
 
 void CPU::step() {
     if (memory->is_halted) {
-        memory->clock.t_instr = 4;
+        memory->tick(4);
         return;
     }
 

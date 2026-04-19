@@ -129,6 +129,8 @@ class MMU {
     void write_short_stack(uint16_t *sp, uint16_t value);
     uint16_t read_short_stack(uint16_t *sp);
 
+    void tick(int cycles);
+
     void UpdateTile(uint16_t address, uint8_t value);
     void UpdateSprite(uint16_t address, uint8_t value);
     void UpdatePalette(Colour *palette, uint8_t value);

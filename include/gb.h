@@ -24,20 +24,21 @@ class GB {
     Status status;
 
     Registers registers;
-    MMU *mmu;
-    CPU *cpu;
-    PPU *ppu;
-    APU *apu;
-    Interrupts *interrupts;
-    Timer *timer;
-    Renderer *renderer;
-    Joypad *joypad;
-    Cartridge *cartridge;
-
+    MMU *mmu = nullptr;
+    CPU *cpu = nullptr;
+    PPU *ppu = nullptr;
+    APU *apu = nullptr;
+    Interrupts *interrupts = nullptr;
+    Timer *timer = nullptr;
+    Renderer *renderer = nullptr;
+    Joypad *joypad = nullptr;
+    Cartridge *cartridge = nullptr;
+    
+    // TODO: Remove the headless parameter
     void init(std::string rom, bool no_bootrom = false, std::string bootrom = "", std::string save_file = "",
-              bool debug = false, bool sound = false);
+              bool debug = false, bool sound = false, bool headless = false);
     void init(Cartridge *cartridge, bool no_bootrom = false, std::string bootrom = "", bool debug = false,
-              bool sound = false);
+              bool sound = false, bool headless = false);
     bool run_step();
     void run();
     void run_until_next_frame();
