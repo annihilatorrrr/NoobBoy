@@ -54,6 +54,8 @@ class Status(Enum):
     TIMEOUT = "timeout"
     SKIPPED = "skipped"
     CRASH = "crash"
+    HANG = "hang"
+    ERROR = "error"
 
 
 STATUS_ICON = {
@@ -62,6 +64,8 @@ STATUS_ICON = {
     Status.TIMEOUT: f"{YELLOW}T{RESET}",
     Status.SKIPPED: f"{DIM}–{RESET}",
     Status.CRASH:   f"{RED}!{RESET}",
+    Status.HANG:    f"{YELLOW}H{RESET}",
+    Status.ERROR:   f"{RED}E{RESET}",
 }
 
 STATUS_MD_LABEL = {
@@ -70,6 +74,8 @@ STATUS_MD_LABEL = {
     Status.TIMEOUT: "Timeout",
     Status.SKIPPED: "Skipped",
     Status.CRASH: "**CRASH**",
+    Status.HANG: "Hang",
+    Status.ERROR: "**ERROR**",
 }
 
 STATUS_MD_ICON = {
@@ -78,6 +84,8 @@ STATUS_MD_ICON = {
     Status.TIMEOUT: '<span style="color:goldenrod">T</span>',
     Status.SKIPPED: '<span style="color:gray">–</span>',
     Status.CRASH:   '<span style="color:orangered">!</span>',
+    Status.HANG:    '<span style="color:goldenrod">H</span>',
+    Status.ERROR:   '<span style="color:red">E</span>',
 }
 
 STATUS_MD_COLOR = {
@@ -86,6 +94,8 @@ STATUS_MD_COLOR = {
     Status.TIMEOUT: 'goldenrod',
     Status.SKIPPED: 'gray',
     Status.CRASH:   'orangered',
+    Status.HANG:    'goldenrod',
+    Status.ERROR:   'red',
 }
 
 
@@ -162,6 +172,18 @@ def discover_tests(filter_pattern: Optional[str] = None) -> list[TestInfo]:
     return tests
 
 
+def _escape_serial(text: str) -> str:
+    """Escape non-printable characters in serial output for safe markdown display."""
+    def _escape_char(ch):
+        code = ord(ch)
+        if ch in ('\n', '\t'):
+            return ch
+        if code < 0x20 or code == 0x7F:
+            return f"\\x{code:02X}"
+        return ch
+    return "".join(_escape_char(c) for c in text)
+
+
 def run_single_test(binary: str, info_dict: dict, config: dict) -> dict:
     suite_conf = get_suite_config(config, info_dict["rel"], info_dict["suite"], info_dict.get("subsuite", ""))
     timeout_cycles = suite_conf.get("timeout_cycles", config.get("default_timeout_cycles", 100_000_000))
@@ -172,6 +194,7 @@ def run_single_test(binary: str, info_dict: dict, config: dict) -> dict:
         "--rom", info_dict["path"],
         "--timeout", str(timeout_cycles),
         "--detection", suite_conf.get("detection", "auto"),
+        "--max-wall-seconds", str(max(1, wall_timeout - 2)),
     ]
 
     base_result = {
@@ -183,18 +206,28 @@ def run_single_test(binary: str, info_dict: dict, config: dict) -> dict:
 
     try:
         proc = subprocess.run(cmd, capture_output=True, text=True, timeout=wall_timeout)
-        status, serial_parts = "fail", []
+        status, serial_parts = None, []
+        has_result_line = False
         for line in proc.stdout.splitlines():
             if line.startswith("SERIAL:"):
                 serial_parts.append(line[len("SERIAL:"):])
             elif line.startswith("RESULT:"):
+                has_result_line = True
                 tag = line[len("RESULT:"):].strip().upper()
-                if tag in ("PASS", "FAIL", "TIMEOUT"):
-                    status = tag.lower()
+                if tag == "PASS":
+                    status = "pass"
+                elif tag == "FAIL":
+                    status = "fail"
+                elif tag == "TIMEOUT":
+                    status = "timeout"
+                elif tag == "HANG":
+                    status = "hang"
+                else:
+                    status = "error"
 
         serial = "\n".join(serial_parts)
 
-        if proc.returncode != 0 and status == "fail":
+        if not has_result_line or status is None:
             status = "crash"
 
         return {**base_result, "status": status, "serial": serial}
@@ -400,8 +433,10 @@ def print_summary(results: list[TestResult], elapsed: float, workers: int):
         ("Passed",  counts["pass"],    GREEN),
         ("Failed",  counts["fail"],    RED),
         ("Timeout", counts["timeout"], YELLOW),
+        ("Hang",    counts["hang"],    YELLOW),
         ("Skipped", counts["skipped"], DIM),
         ("Crashed", counts["crash"],   RED),
+        ("Error",   counts["error"],   RED),
     ]
     for label, value, color in rows:
         if value > 0 or label == "Total":
@@ -439,7 +474,9 @@ def generate_tests_md(results: list[TestResult]):
         f"| {_md_color('Passed', 'green')} | {counts['pass']} |",
         f"| {_md_color('Failed', 'red')} | {counts['fail']} |",
         f"| {_md_color('Timeout', 'goldenrod')} | {counts['timeout']} |",
+        f"| {_md_color('Hang', 'goldenrod')} | {counts['hang']} |",
         f"| {_md_color('Crashed', 'red')} | {counts['crash']} |",
+        f"| {_md_color('Error', 'red')} | {counts['error']} |",
         f"| {_md_color('Skipped', 'gray')} | {counts['skipped']} |",
         f"| **Total** | **{counts['total']}** |",
         "",
@@ -504,7 +541,7 @@ def generate_tests_md(results: list[TestResult]):
                 icon = STATUS_MD_ICON.get(result.status, "")
                 color = STATUS_MD_COLOR.get(result.status, "")
                 status_text = _md_color(STATUS_MD_LABEL.get(result.status, "?"), color)
-                output = _md_escape(result.serial.strip()) if result.serial else result.reason or ""
+                output = _md_escape(_escape_serial(result.serial.strip())) if result.serial else result.reason or ""
                 if len(output) > 300:
                     output = output[:300] + "..."
                 lines.append(f"| {icon} | {result.name} | {status_text} | {output} |")
@@ -530,7 +567,7 @@ def save_results_json(results: list[TestResult]):
     with open(RESULTS_JSON_PATH, "w") as fh:
         json.dump({
             "timestamp": datetime.now().isoformat(),
-            "summary": {key: counts[key] for key in ("total", "pass", "fail", "timeout", "skipped", "crash")},
+            "summary": {key: counts[key] for key in ("total", "pass", "fail", "timeout", "hang", "skipped", "crash", "error")},
             "suites": {key: dict(val) for key, val in suites_data.items()},
         }, fh, indent=2)
 
@@ -579,6 +616,15 @@ def extract_testroms():
     TESTROMS_DIR.mkdir(exist_ok=True)
     with zipfile.ZipFile(zip_path) as zf:
         zf.extractall(TESTROMS_DIR)
+
+
+def audit_config_keys(config: dict, discovered_rels: set[str]):
+    """Warn about config.json suite keys that look like ROM paths but don't match any discovered ROM."""
+    suites = config.get("suites", {})
+    for key in suites:
+        if "/" in key and (key.endswith(".gb") or key.endswith(".gbc")):
+            if key not in discovered_rels:
+                print(f"  {YELLOW}WARNING: config.json key '{key}' does not match any discovered ROM{RESET}")
 
 
 def list_suites(config: dict):
@@ -656,6 +702,10 @@ def main():
         if args.filter:
             print(f"  Filter: {args.filter}")
         sys.exit(0)
+
+    # Audit config.json keys against discovered ROMs
+    all_rels = {test.rel for test in all_tests}
+    audit_config_keys(config, all_rels)
 
     all_results: list[TestResult] = []
     runnable_tests: list[TestInfo] = []

@@ -38,7 +38,7 @@ void CPU::no_bootrom_init() {
 
 void CPU::step() {
     if (memory->is_halted) {
-        memory->tick(4);
+        memory->tick_cycles(4);
         return;
     }
 

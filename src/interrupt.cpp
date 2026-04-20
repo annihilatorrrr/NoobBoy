@@ -52,7 +52,7 @@ bool Interrupts::check() {
 }
 
 void Interrupts::trigger_interrupt(InterruptFlags interrupt, uint8_t jump_pc) {
-    mmu->tick(8);
+    mmu->tick_cycles(8);
     mmu->write_short_stack(&registers->sp, this->registers->pc);
 
     this->registers->pc = jump_pc;
@@ -60,5 +60,5 @@ void Interrupts::trigger_interrupt(InterruptFlags interrupt, uint8_t jump_pc) {
     this->unset_interrupt_flag(interrupt);
     mmu->is_halted = false;
 
-    mmu->tick(4);
+    mmu->tick_cycles(4);
 }

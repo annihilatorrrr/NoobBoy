@@ -121,7 +121,7 @@ class MMU {
     void load_default_boot_rom();
 
     void write_byte(uint16_t address, uint8_t value);
-    uint8_t read_byte(uint16_t address);
+    uint8_t read_byte(uint16_t address, bool tick = true);
 
     void write_short(uint16_t address, uint16_t value);
     uint16_t read_short(uint16_t address);
@@ -129,7 +129,7 @@ class MMU {
     void write_short_stack(uint16_t *sp, uint16_t value);
     uint16_t read_short_stack(uint16_t *sp);
 
-    void tick(int cycles);
+    void tick_cycles(int cycles);
 
     void UpdateTile(uint16_t address, uint8_t value);
     void UpdateSprite(uint16_t address, uint8_t value);

@@ -1,0 +1,1851 @@
+{
+  "timestamp": "2026-04-20T11:33:37.752453",
+  "summary": {
+    "total": 291,
+    "pass": 70,
+    "fail": 75,
+    "timeout": 90,
+    "hang": 0,
+    "skipped": 55,
+    "crash": 1,
+    "error": 0
+  },
+  "suites": {
+    "acid": {
+      "(root)": [
+        {
+          "name": "cgb-acid-hell.gbc",
+          "status": "skipped",
+          "serial": "",
+          "reason": "GBC ROM (DMG only)"
+        },
+        {
+          "name": "cgb-acid2.gbc",
+          "status": "skipped",
+          "serial": "",
+          "reason": "GBC ROM (DMG only)"
+        },
+        {
+          "name": "dmg-acid2.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "which.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        }
+      ]
+    },
+    "blargg": {
+      "dmg_sound": [
+        {
+          "name": "01-registers.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Instruction timing not yet accurate"
+        },
+        {
+          "name": "02-len_ctr.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Instruction timing not yet accurate"
+        },
+        {
+          "name": "03-trigger.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Instruction timing not yet accurate"
+        },
+        {
+          "name": "04-sweep.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Instruction timing not yet accurate"
+        },
+        {
+          "name": "05-sweep_details.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Instruction timing not yet accurate"
+        },
+        {
+          "name": "06-overflow_on_trigger.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Instruction timing not yet accurate"
+        },
+        {
+          "name": "07-len_sweep_period_sync.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Instruction timing not yet accurate"
+        },
+        {
+          "name": "08-len_ctr_during_power.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Instruction timing not yet accurate"
+        },
+        {
+          "name": "09-wave_read_while_on.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Instruction timing not yet accurate"
+        },
+        {
+          "name": "10-wave_trigger_while_on.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Instruction timing not yet accurate"
+        },
+        {
+          "name": "11-regs_after_power.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Instruction timing not yet accurate"
+        },
+        {
+          "name": "12-wave_write_while_on.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Instruction timing not yet accurate"
+        }
+      ],
+      "(root)": [
+        {
+          "name": "halt_bug.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Instruction timing not yet accurate"
+        },
+        {
+          "name": "instr_timing.gb",
+          "status": "pass",
+          "serial": "instr_timing",
+          "reason": ""
+        },
+        {
+          "name": "interrupt_time.gb",
+          "status": "crash",
+          "serial": "",
+          "reason": ""
+        }
+      ],
+      "cpu_instrs": [
+        {
+          "name": "01-special.gb",
+          "status": "pass",
+          "serial": "01-special",
+          "reason": ""
+        },
+        {
+          "name": "02-interrupts.gb",
+          "status": "pass",
+          "serial": "02-interrupts",
+          "reason": ""
+        },
+        {
+          "name": "03-op_sp,hl.gb",
+          "status": "pass",
+          "serial": "03-op sp,hl",
+          "reason": ""
+        },
+        {
+          "name": "04-op_r,imm.gb",
+          "status": "pass",
+          "serial": "04-op r,imm",
+          "reason": ""
+        },
+        {
+          "name": "08-misc_instrs.gb",
+          "status": "pass",
+          "serial": "08-misc instrs",
+          "reason": ""
+        },
+        {
+          "name": "05-op_rp.gb",
+          "status": "pass",
+          "serial": "05-op rp",
+          "reason": ""
+        },
+        {
+          "name": "06-ld_r,r.gb",
+          "status": "pass",
+          "serial": "06-ld r,r",
+          "reason": ""
+        },
+        {
+          "name": "07-jr,jp,call,ret,rst.gb",
+          "status": "pass",
+          "serial": "07-jr,jp,call,ret,rst",
+          "reason": ""
+        },
+        {
+          "name": "09-op_r,r.gb",
+          "status": "pass",
+          "serial": "09-op r,r",
+          "reason": ""
+        },
+        {
+          "name": "10-bit_ops.gb",
+          "status": "pass",
+          "serial": "10-bit ops",
+          "reason": ""
+        },
+        {
+          "name": "11-op_a,(hl).gb",
+          "status": "pass",
+          "serial": "11-op a,(hl)",
+          "reason": ""
+        }
+      ],
+      "mem_timing": [
+        {
+          "name": "01-read_timing.gb",
+          "status": "pass",
+          "serial": "01-read_timing",
+          "reason": ""
+        },
+        {
+          "name": "02-write_timing.gb",
+          "status": "pass",
+          "serial": "02-write_timing",
+          "reason": ""
+        },
+        {
+          "name": "03-modify_timing.gb",
+          "status": "pass",
+          "serial": "03-modify_timing",
+          "reason": ""
+        }
+      ],
+      "mem_timing-2": [
+        {
+          "name": "01-read_timing.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "02-write_timing.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "03-modify_timing.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        }
+      ],
+      "cgb_sound": [
+        {
+          "name": "04-sweep.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "01-registers.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "12-wave.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "07-len_sweep_period_sync.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "03-trigger.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "06-overflow_on_trigger.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "02-len_ctr.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "05-sweep_details.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "08-len_ctr_during_power.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "09-wave_read_while_on.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "10-wave_trigger_while_on.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "11-regs_after_power.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        }
+      ],
+      "oam_bug": [
+        {
+          "name": "1-lcd_sync.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "3-non_causes.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "2-causes.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "4-scanline_timing.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "8-instr_effect.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "6-timing_no_bug.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "7-timing_effect.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "5-timing_bug.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        }
+      ]
+    },
+    "daid": {
+      "(root)": [
+        {
+          "name": "speed_switch_timing_div.gbc",
+          "status": "skipped",
+          "serial": "",
+          "reason": "GBC ROM (DMG only)"
+        },
+        {
+          "name": "speed_switch_timing_ly.gbc",
+          "status": "skipped",
+          "serial": "",
+          "reason": "GBC ROM (DMG only)"
+        },
+        {
+          "name": "speed_switch_timing_stat.gbc",
+          "status": "skipped",
+          "serial": "",
+          "reason": "GBC ROM (DMG only)"
+        },
+        {
+          "name": "ppu_scanline_bgp.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "rom_and_ram.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "stop_instr.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "stop_instr_gbc_mode3.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        }
+      ]
+    },
+    "hacktix": {
+      "(root)": [
+        {
+          "name": "bully.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "strikethrough.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        }
+      ]
+    },
+    "mealybug-tearoom-tests": {
+      "ppu": [
+        {
+          "name": "m2_win_en_toggle.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_bgp_change.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_bgp_change_sprites.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_lcdc_bg_en_change.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_lcdc_bg_en_change2.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_lcdc_bg_map_change.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_lcdc_bg_map_change2.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_lcdc_obj_en_change.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_lcdc_obj_en_change_variant.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_lcdc_obj_size_change.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_lcdc_obj_size_change_scx.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_lcdc_tile_sel_change.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_lcdc_tile_sel_change2.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_lcdc_tile_sel_win_change.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_lcdc_tile_sel_win_change2.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_lcdc_win_en_change_multiple.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_lcdc_win_en_change_multiple_wx.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_lcdc_win_map_change.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_lcdc_win_map_change2.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_obp0_change.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_scx_high_5_bits.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_scx_high_5_bits_change2.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_scx_low_3_bits.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_scy_change.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_scy_change2.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_window_timing.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_window_timing_wx_0.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_wx_4_change.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_wx_4_change_sprites.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_wx_5_change.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "m3_wx_6_change.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        },
+        {
+          "name": "win_without_bg.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Visual comparison required"
+        }
+      ]
+    },
+    "mooneye": {
+      "acceptance/bits": [
+        {
+          "name": "reg_f.gb",
+          "status": "skipped",
+          "serial": "",
+          "reason": "Instruction timing not yet accurate"
+        },
+        {
+          "name": "mem_oam.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "unused_hwio-GS.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        }
+      ],
+      "acceptance": [
+        {
+          "name": "add_sp_e_timing.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "boot_div-S.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "boot_div-dmg0.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "boot_regs-dmgABC.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "boot_div-dmgABCmgb.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "boot_div2-S.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "boot_hwio-S.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "boot_hwio-dmg0.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "div_timing.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "boot_regs-dmg0.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "halt_ime0_ei.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "halt_ime1_timing.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "boot_regs-mgb.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "boot_regs-sgb.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "boot_hwio-dmgABCmgb.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "call_cc_timing.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "boot_regs-sgb2.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "call_cc_timing2.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "call_timing.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "call_timing2.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "di_timing-GS.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "pop_timing.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "ei_sequence.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "ei_timing.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "if_ie_registers.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "halt_ime0_nointr_timing.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "halt_ime1_timing2-GS.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "intr_timing.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "jp_cc_timing.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "jp_timing.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "ld_hl_sp_e_timing.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "oam_dma_restart.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "oam_dma_start.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "oam_dma_timing.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "rapid_di_ei.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "push_timing.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "ret_cc_timing.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "ret_timing.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "reti_intr_timing.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "reti_timing.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "rst_timing.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        }
+      ],
+      "acceptance/instr": [
+        {
+          "name": "daa.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        }
+      ],
+      "acceptance/oam_dma": [
+        {
+          "name": "basic.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "reg_read.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "sources-GS.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        }
+      ],
+      "acceptance/ppu": [
+        {
+          "name": "intr_2_0_timing.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "intr_1_2_timing-GS.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "hblank_ly_scx_timing-GS.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "intr_2_oam_ok_timing.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "intr_2_mode0_timing.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "intr_2_mode3_timing.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "intr_2_mode0_timing_sprites.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "lcdon_write_timing-GS.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "lcdon_timing-GS.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "vblank_stat_intr-GS.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "stat_lyc_onoff.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "stat_irq_blocking.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        }
+      ],
+      "acceptance/interrupts": [
+        {
+          "name": "ie_push.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        }
+      ],
+      "acceptance/timer": [
+        {
+          "name": "rapid_toggle.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "div_write.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "tim00.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "tim01_div_trigger.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "tim00_div_trigger.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "tim01.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "tim10.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "tim11_div_trigger.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "tim10_div_trigger.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "tim11.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "tima_reload.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "tma_write_reloading.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "tima_write_reloading.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        }
+      ],
+      "emulator-only/mbc1": [
+        {
+          "name": "multicart_rom_8Mb.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "rom_16Mb.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "rom_1Mb.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "rom_2Mb.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "rom_4Mb.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "ram_64kb.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "ram_256kb.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "rom_512kb.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "rom_8Mb.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "bits_bank1.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "bits_bank2.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "bits_mode.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "bits_ramg.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        }
+      ],
+      "emulator-only/mbc2": [
+        {
+          "name": "ram.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "rom_1Mb.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "rom_2Mb.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "rom_512kb.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "bits_unused.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "bits_romb.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "bits_ramg.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        }
+      ],
+      "emulator-only/mbc5": [
+        {
+          "name": "rom_1Mb.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "rom_2Mb.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "rom_16Mb.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "rom_4Mb.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "rom_32Mb.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "rom_512kb.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "rom_8Mb.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "rom_64Mb.gb",
+          "status": "pass",
+          "serial": "",
+          "reason": ""
+        }
+      ],
+      "acceptance/serial": [
+        {
+          "name": "boot_sclk_align-dmgABCmgb.gb",
+          "status": "timeout",
+          "serial": "\u0000BBBBBB",
+          "reason": ""
+        }
+      ],
+      "misc": [
+        {
+          "name": "boot_div-cgb0.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "boot_hwio-C.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "boot_div-cgbABCDE.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "boot_regs-A.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "boot_div-A.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "boot_regs-cgb.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        }
+      ],
+      "misc/bits": [
+        {
+          "name": "unused_hwio-C.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        }
+      ],
+      "manual-only": [
+        {
+          "name": "sprite_priority.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        }
+      ],
+      "misc/ppu": [
+        {
+          "name": "vblank_stat_intr-C.gb",
+          "status": "timeout",
+          "serial": "BBBBBB",
+          "reason": ""
+        }
+      ]
+    },
+    "ax6": {
+      "(root)": [
+        {
+          "name": "rtc3test-2.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "rtc3test-1.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "rtc3test-3.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        }
+      ]
+    },
+    "cpp": {
+      "(root)": [
+        {
+          "name": "latch-rtc-test.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "ramg-mbc3-test.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        },
+        {
+          "name": "rtc-invalid-banks-test.gb",
+          "status": "timeout",
+          "serial": "",
+          "reason": ""
+        }
+      ]
+    },
+    "samesuite": {
+      "apu/channel_1": [
+        {
+          "name": "channel_1_align.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_1_align_cpu.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_1_delay.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_1_duty.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_1_duty_delay.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_1_extra_length_clocking-cgb0B.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_1_freq_change.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_1_freq_change_timing-cgb0BC.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_1_freq_change_timing-A.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_1_freq_change_timing-cgbDE.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_1_restart.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_1_nrx2_glitch.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_1_restart_nrx2_glitch.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_1_stop_restart.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_1_stop_div.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_1_volume.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_1_sweep.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_1_sweep_restart_2.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_1_sweep_restart.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_1_volume_div.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_1_nrx2_speed_change.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        }
+      ],
+      "apu/channel_2": [
+        {
+          "name": "channel_2_align.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_2_align_cpu.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_2_delay.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_2_duty.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_2_freq_change.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_2_duty_delay.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_2_extra_length_clocking-cgb0B.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_2_restart.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_2_restart_nrx2_glitch.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_2_stop_restart.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_2_volume.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_2_nrx2_glitch.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_2_stop_div.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_2_volume_div.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_2_nrx2_speed_change.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        }
+      ],
+      "apu/channel_3": [
+        {
+          "name": "channel_3_and_glitch.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_3_delay.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_3_extra_length_clocking-cgb0.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_3_restart_delay.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_3_first_sample.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_3_freq_change_delay.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_3_extra_length_clocking-cgbB.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_3_restart_stop_delay.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_3_restart_during_delay.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_3_shift_delay.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_3_stop_delay.gb",
+          "status": "pass",
+          "serial": "\u0003\u0005\b",
+          "reason": ""
+        },
+        {
+          "name": "channel_3_shift_skip_delay.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_3_wave_ram_locked_write.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_3_wave_ram_sync.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_3_stop_div.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        }
+      ],
+      "apu/channel_4": [
+        {
+          "name": "channel_4_align.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_4_delay.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_4_equivalent_frequencies.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_4_freq_change.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_4_frequency_alignment.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_4_extra_length_clocking-cgb0B.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_4_lfsr15.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_4_lfsr.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_4_lfsr_7_15.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_4_lfsr_15_7.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_4_lfsr_restart.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_4_lfsr_restart_fast.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "channel_4_volume_div.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        }
+      ],
+      "apu": [
+        {
+          "name": "div_write_trigger_10.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "div_trigger_volume_10.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "div_write_trigger_volume_10.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "div_write_trigger.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "div_write_trigger_volume.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        }
+      ],
+      "dma": [
+        {
+          "name": "gbc_dma_cont.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "gdma_addr_mask.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "hdma_lcd_off.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "hdma_mode0.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        }
+      ],
+      "ppu": [
+        {
+          "name": "blocking_bgpi_increase.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        }
+      ],
+      "sgb": [
+        {
+          "name": "command_mlt_req_1_incrementing.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        },
+        {
+          "name": "command_mlt_req.gb",
+          "status": "fail",
+          "serial": "BBBBBB",
+          "reason": ""
+        }
+      ]
+    }
+  }
+}

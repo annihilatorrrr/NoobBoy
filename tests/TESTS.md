@@ -1,15 +1,17 @@
 # NoobBoy — Test Results
 
-> Generated on 2026-04-19 13:22:57
+> Generated on 2026-04-20 11:33:37
 
 **70** of **236** runnable tests passing (30%) — 55 skipped
 
 | | Count |
 |:--|--:|
 | <span style="color:green">Passed</span> | 70 |
-| <span style="color:red">Failed</span> | 0 |
+| <span style="color:red">Failed</span> | 75 |
 | <span style="color:goldenrod">Timeout</span> | 90 |
-| <span style="color:red">Crashed</span> | 76 |
+| <span style="color:goldenrod">Hang</span> | 0 |
+| <span style="color:red">Crashed</span> | 1 |
+| <span style="color:red">Error</span> | 0 |
 | <span style="color:gray">Skipped</span> | 55 |
 | **Total** | **291** |
 
@@ -244,7 +246,7 @@
 
 | | Test | Status | Output |
 |:--|:--|:--|:--|
-| <span style="color:goldenrod">T</span> | boot_sclk_align-dmgABCmgb.gb | <span style="color:goldenrod">Timeout</span> |  BBBBBB |
+| <span style="color:goldenrod">T</span> | boot_sclk_align-dmgABCmgb.gb | <span style="color:goldenrod">Timeout</span> | \x00BBBBBB |
 
 ### acceptance/timer — <span style="color:green">13/13</span>
 
@@ -344,115 +346,115 @@
 
 | | Test | Status | Output |
 |:--|:--|:--|:--|
-| <span style="color:orangered">!</span> | div_trigger_volume_10.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | div_write_trigger.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | div_write_trigger_10.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | div_write_trigger_volume.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | div_write_trigger_volume_10.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | div_trigger_volume_10.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | div_write_trigger.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | div_write_trigger_10.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | div_write_trigger_volume.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | div_write_trigger_volume_10.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
 
 ### apu/channel_1 — <span style="color:red">0/21</span>
 
 | | Test | Status | Output |
 |:--|:--|:--|:--|
-| <span style="color:orangered">!</span> | channel_1_align.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_1_align_cpu.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_1_delay.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_1_duty.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_1_duty_delay.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_1_extra_length_clocking-cgb0B.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_1_freq_change.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_1_freq_change_timing-A.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_1_freq_change_timing-cgb0BC.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_1_freq_change_timing-cgbDE.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_1_nrx2_glitch.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_1_nrx2_speed_change.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_1_restart.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_1_restart_nrx2_glitch.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_1_stop_div.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_1_stop_restart.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_1_sweep.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_1_sweep_restart.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_1_sweep_restart_2.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_1_volume.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_1_volume_div.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_1_align.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_1_align_cpu.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_1_delay.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_1_duty.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_1_duty_delay.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_1_extra_length_clocking-cgb0B.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_1_freq_change.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_1_freq_change_timing-A.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_1_freq_change_timing-cgb0BC.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_1_freq_change_timing-cgbDE.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_1_nrx2_glitch.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_1_nrx2_speed_change.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_1_restart.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_1_restart_nrx2_glitch.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_1_stop_div.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_1_stop_restart.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_1_sweep.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_1_sweep_restart.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_1_sweep_restart_2.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_1_volume.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_1_volume_div.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
 
 ### apu/channel_2 — <span style="color:red">0/15</span>
 
 | | Test | Status | Output |
 |:--|:--|:--|:--|
-| <span style="color:orangered">!</span> | channel_2_align.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_2_align_cpu.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_2_delay.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_2_duty.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_2_duty_delay.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_2_extra_length_clocking-cgb0B.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_2_freq_change.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_2_nrx2_glitch.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_2_nrx2_speed_change.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_2_restart.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_2_restart_nrx2_glitch.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_2_stop_div.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_2_stop_restart.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_2_volume.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_2_volume_div.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_2_align.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_2_align_cpu.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_2_delay.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_2_duty.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_2_duty_delay.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_2_extra_length_clocking-cgb0B.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_2_freq_change.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_2_nrx2_glitch.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_2_nrx2_speed_change.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_2_restart.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_2_restart_nrx2_glitch.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_2_stop_div.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_2_stop_restart.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_2_volume.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_2_volume_div.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
 
 ### apu/channel_3 — <span style="color:goldenrod">1/15</span>
 
 | | Test | Status | Output |
 |:--|:--|:--|:--|
-| <span style="color:orangered">!</span> | channel_3_and_glitch.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_3_delay.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_3_extra_length_clocking-cgb0.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_3_extra_length_clocking-cgbB.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_3_first_sample.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_3_freq_change_delay.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_3_restart_delay.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_3_restart_during_delay.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_3_restart_stop_delay.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_3_shift_delay.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_3_shift_skip_delay.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:green">✓</span> | channel_3_stop_delay.gb | <span style="color:green">Pass</span> |  |
-| <span style="color:orangered">!</span> | channel_3_stop_div.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_3_wave_ram_locked_write.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_3_wave_ram_sync.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_3_and_glitch.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_3_delay.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_3_extra_length_clocking-cgb0.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_3_extra_length_clocking-cgbB.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_3_first_sample.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_3_freq_change_delay.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_3_restart_delay.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_3_restart_during_delay.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_3_restart_stop_delay.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_3_shift_delay.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_3_shift_skip_delay.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:green">✓</span> | channel_3_stop_delay.gb | <span style="color:green">Pass</span> | \x03\x05\x08 |
+| <span style="color:orangered">✗</span> | channel_3_stop_div.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_3_wave_ram_locked_write.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_3_wave_ram_sync.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
 
 ### apu/channel_4 — <span style="color:red">0/13</span>
 
 | | Test | Status | Output |
 |:--|:--|:--|:--|
-| <span style="color:orangered">!</span> | channel_4_align.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_4_delay.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_4_equivalent_frequencies.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_4_extra_length_clocking-cgb0B.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_4_freq_change.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_4_frequency_alignment.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_4_lfsr.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_4_lfsr15.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_4_lfsr_15_7.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_4_lfsr_7_15.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_4_lfsr_restart.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_4_lfsr_restart_fast.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | channel_4_volume_div.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_4_align.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_4_delay.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_4_equivalent_frequencies.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_4_extra_length_clocking-cgb0B.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_4_freq_change.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_4_frequency_alignment.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_4_lfsr.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_4_lfsr15.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_4_lfsr_15_7.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_4_lfsr_7_15.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_4_lfsr_restart.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_4_lfsr_restart_fast.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | channel_4_volume_div.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
 
 ### dma — <span style="color:red">0/4</span>
 
 | | Test | Status | Output |
 |:--|:--|:--|:--|
-| <span style="color:orangered">!</span> | gbc_dma_cont.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | gdma_addr_mask.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | hdma_lcd_off.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | hdma_mode0.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | gbc_dma_cont.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | gdma_addr_mask.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | hdma_lcd_off.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | hdma_mode0.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
 
 ### ppu — <span style="color:red">0/1</span>
 
 | | Test | Status | Output |
 |:--|:--|:--|:--|
-| <span style="color:orangered">!</span> | blocking_bgpi_increase.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | blocking_bgpi_increase.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
 
 ### sgb — <span style="color:red">0/2</span>
 
 | | Test | Status | Output |
 |:--|:--|:--|:--|
-| <span style="color:orangered">!</span> | command_mlt_req.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
-| <span style="color:orangered">!</span> | command_mlt_req_1_incrementing.gb | <span style="color:orangered">**CRASH**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | command_mlt_req.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
+| <span style="color:orangered">✗</span> | command_mlt_req_1_incrementing.gb | <span style="color:orangered">**FAIL**</span> | BBBBBB |
 

@@ -60,7 +60,7 @@ void MMU::UpdatePalette(Colour *palette, uint8_t value) {
 
 
 // TODO: Add an option to read without ticking
-uint8_t MMU::read_byte(uint16_t address) {
+uint8_t MMU::read_byte(uint16_t address, bool tick /*= true*/) {
     uint8_t value;
 
     if (address == 0xff00) {
@@ -103,8 +103,10 @@ uint8_t MMU::read_byte(uint16_t address) {
 
     else
         value = memory[address];
-
-    tick(4);
+    
+    if (tick){
+        tick_cycles(4);
+    }
     return value;
 }
 
@@ -113,7 +115,7 @@ void MMU::write_byte(uint16_t address, uint8_t value) {
     if (address == 0xFF02 && value == 0x81) {
         serial_output += static_cast<char>(memory[0xFF01]);
         memory[0xFF02] = 0x00;
-        tick(4);
+        tick_cycles(4);
         return;
     }
 
@@ -126,7 +128,7 @@ void MMU::write_byte(uint16_t address, uint8_t value) {
     }
 
     if (address >= 0xFEA0 && address <= 0xFEFF) {  // Writing in unused area
-        tick(4);
+        tick_cycles(4);
         return;
     }
 
@@ -175,7 +177,7 @@ void MMU::write_byte(uint16_t address, uint8_t value) {
     if (address >= 0xFE00 && address <= 0xFE9F)
         UpdateSprite(address, value);
 
-    tick(4);
+    tick_cycles(4);
 }
 
 uint16_t MMU::read_short(uint16_t address) { return read_byte(address) | (read_byte(address + 1) << 8); }
@@ -198,7 +200,7 @@ uint16_t MMU::read_short_stack(uint16_t *sp) {
     return value;
 }
 
-void MMU::tick(int cycles) {
+void MMU::tick_cycles(int cycles) {
     clock.t += cycles;
     clock.t_instr += cycles;
     timer->tick(cycles);
